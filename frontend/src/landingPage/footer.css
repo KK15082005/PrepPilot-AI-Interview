@@ -1,0 +1,43 @@
+.footer{
+    background:#f8fffe;
+    border-top:1px solid #d8ecea;
+}
+
+.logo{
+    color:#1a8f8b;
+    font-weight:700;
+}
+
+.footer p{
+    color:#6b7280;
+    line-height:1.7;
+}
+
+.footer h5{
+    font-weight:600;
+    margin-bottom:18px;
+}
+
+.footer ul li{
+    margin-bottom:10px;
+}
+
+.footer a{
+    text-decoration:none;
+    color:#6b7280;
+    transition:.3s;
+}
+
+.footer a:hover{
+    color:#1a8f8b;
+}
+
+.footer i{
+    color:#1a8f8b;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.footer i:hover{
+    transform:translateY(-3px);
+}

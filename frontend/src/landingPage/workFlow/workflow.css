@@ -1,0 +1,29 @@
+.step-circle{
+    width: 45px; ;
+    height: 45px;
+    border-radius: 50% ;
+    background: #3CC8C3;
+    color: #ffffff ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 18px ;
+    font-weight: 600;
+}
+
+.how-work i{
+    font-size: 55px;
+    color: #3CC8C3;
+    margin-bottom: 18px;
+}
+
+.how-work h5{
+    font-weight: 700;
+}
+
+.how-work p {
+    color: #6b7280;
+    font-size: 15px;
+    line-height: 1.6;
+}
