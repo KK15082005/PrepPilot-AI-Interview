@@ -6,24 +6,34 @@ const {evaluateAnswers} = require("../services/aiService");
 async function submitAnswer(req , res){
     try{
         const {
-        interviewId,
-        questionId,
-        answer
-        }=req.body;
+            interviewId,
+            questionId,
+            answer
+        } = req.body;
+
         const question = await questionModel.findById(questionId);
+        if (!question) {
+            return res.status(404).json({
+                success: false,
+                message: "Question not found"
+            });
+        }
+
         const aiEvaluation = await evaluateAnswers(question.question , answer);
         const userId = req.user._id ;
+
         const newAnswer = await answerModel.create ({
             interviewId,
             questionId,
             userId,
             answer,
             score : aiEvaluation.score ,
-            feedback : aiEvaluation.feedaback ,
-            strengths : aiEvaluation.strengths ,
-            weakness : aiEvaluation.weakness ,
+            feedback : aiEvaluation.feedback ,
+            strengths : aiEvaluation.strengths || [] ,
+            weakness : aiEvaluation.weaknesses || aiEvaluation.weakness || [] ,
             accurateAnswer : aiEvaluation.accurateAnswer 
         });
+
         return res.status(200).json({
             success : true ,
             message : "Answer Evaluated SuccessFully!",
@@ -76,4 +86,5 @@ async function deleteAnswer(req , res){
         });
     }
 }
+
 module.exports = {submitAnswer , getAllAnswers , deleteAnswer} ;
