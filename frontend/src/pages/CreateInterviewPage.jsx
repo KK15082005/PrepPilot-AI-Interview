@@ -1,16 +1,17 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API from "../services/api";
 
 function CreateInterview() {
   const navigate = useNavigate();
+  const [isGenerating, setIsGenerating] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     role: "",
     experienceLevel: "",
     interviewType: "",
     difficulty: "",
-    duration: "",
+    duration: "15",
   });
 
   const handleChange = (e) => {
@@ -22,63 +23,35 @@ function CreateInterview() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsGenerating(true);
 
     try {
-      const token = localStorage.getItem("token");
-
-      console.log("Token:", token);
-      console.log("Form Data:", formData);
-
-      const response = await axios.post(
-        "http://localhost:3000/api/interview/create-interview",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const interviewId = response.data.interview._id;
-      await axios.post(
-        "http://localhost:3000/api/ai/start-interview",
-        { interviewId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      alert("Interview Created Successfully! 🎉");
-
-      // Navigate to interview page
-      navigate(`/interview/${interviewId}`);
-
-      alert("Interview Created Successfully! 🎉  All the best ...");
-
-      // Optional: Clear form
-      setFormData({
-        title: "",
-        role: "",
-        experienceLevel: "",
-        interviewType: "",
-        difficulty: "",
-        duration: "",
+      // 1. Create Interview Record
+      const response = await API.post("/interview/create-interview", {
+        ...formData,
+        duration: Number(formData.duration),
       });
 
-      // Later we'll navigate to interview page
-      // navigate(`/interview/${response.data.interview._id}`);
+      const interviewId = response.data?.interview?._id;
+      if (!interviewId) {
+        throw new Error("Failed to create interview record");
+      }
+
+      // 2. Generate questions via Gemini AI
+      await API.post("/ai/start-interview", { interviewId });
+
+      // 3. Navigate directly to the newly created interview session
+      navigate(`/interview/${interviewId}`);
 
     } catch (err) {
-      console.error(err);
-
-      if (err.response) {
-        console.log("Backend Error:", err.response.data);
-        alert(err.response.data.message || "Something went wrong!");
+      console.error("Create Interview Error:", err);
+      if (err.response?.data?.message) {
+        alert(err.response.data.message);
       } else {
-        alert("Unable to connect to the server.");
+        alert(err.message || "Failed to create AI interview. Please try again.");
       }
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -92,11 +65,11 @@ function CreateInterview() {
           padding: "50px 0",
         }}
       >
-        <div className="container">
+        <div className="container" style={{ maxWidth: "860px" }}>
           <div
             className="card border-0"
             style={{
-              padding: "50px",
+              padding: "45px",
               borderRadius: "24px",
               boxShadow: "0 20px 60px rgba(16,24,40,0.08)",
             }}
@@ -111,46 +84,47 @@ function CreateInterview() {
             </h2>
 
             <p className="text-secondary mb-4">
-              Configure your AI mock interview.
+              Configure your role, topic, and difficulty to generate custom questions with Gemini AI.
             </p>
 
             <div className="row g-4">
               <div className="col-md-6">
-                <label className="form-label">Interview Title</label>
-
+                <label className="form-label fw-semibold">Interview Title</label>
                 <input
                   className="form-control py-3"
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  placeholder="Frontend Developer Interview"
+                  placeholder="e.g. Frontend Developer Mock"
+                  required
+                  disabled={isGenerating}
                 />
               </div>
 
               <div className="col-md-6">
-                <label className="form-label">Job Role</label>
-
+                <label className="form-label fw-semibold">Target Job Role</label>
                 <input
                   className="form-control py-3"
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  placeholder="React Developer"
+                  placeholder="e.g. React Developer, Node.js Engineer"
+                  required
+                  disabled={isGenerating}
                 />
               </div>
 
               <div className="col-md-6">
-                <label className="form-label">
-                  Experience Level
-                </label>
-
+                <label className="form-label fw-semibold">Experience Level</label>
                 <select
                   className="form-select py-3"
                   name="experienceLevel"
                   value={formData.experienceLevel}
                   onChange={handleChange}
+                  required
+                  disabled={isGenerating}
                 >
-                  <option value="">Select</option>
+                  <option value="">Select Level</option>
                   <option>Fresher</option>
                   <option>1-2 Years</option>
                   <option>3-5 Years</option>
@@ -159,17 +133,16 @@ function CreateInterview() {
               </div>
 
               <div className="col-md-6">
-                <label className="form-label">
-                  Interview Type
-                </label>
-
+                <label className="form-label fw-semibold">Interview Type</label>
                 <select
                   className="form-select py-3"
                   name="interviewType"
                   value={formData.interviewType}
                   onChange={handleChange}
+                  required
+                  disabled={isGenerating}
                 >
-                  <option value="">Select</option>
+                  <option value="">Select Type</option>
                   <option>Technical</option>
                   <option>HR</option>
                   <option>Behavioral</option>
@@ -178,15 +151,16 @@ function CreateInterview() {
               </div>
 
               <div className="col-md-6">
-                <label className="form-label">Difficulty</label>
-
+                <label className="form-label fw-semibold">Difficulty</label>
                 <select
                   className="form-select py-3"
                   name="difficulty"
                   value={formData.difficulty}
                   onChange={handleChange}
+                  required
+                  disabled={isGenerating}
                 >
-                  <option value="">Select</option>
+                  <option value="">Select Difficulty</option>
                   <option>Easy</option>
                   <option>Medium</option>
                   <option>Hard</option>
@@ -194,36 +168,47 @@ function CreateInterview() {
               </div>
 
               <div className="col-md-6">
-                <label className="form-label">Duration</label>
-
+                <label className="form-label fw-semibold">Duration</label>
                 <select
                   className="form-select py-3"
                   name="duration"
                   value={formData.duration}
                   onChange={handleChange}
+                  required
+                  disabled={isGenerating}
                 >
-                  <option value="">Select</option>
-                  <option value={15}>15 Minutes</option>
-                  <option value={30}>30 Minutes</option>
-                  <option value={45}>45 Minutes</option>
+                  <option value="15">15 Minutes (10 Questions)</option>
+                  <option value="30">30 Minutes (20 Questions)</option>
+                  <option value="45">45 Minutes (30 Questions)</option>
                 </select>
               </div>
             </div>
 
             <button
               type="submit"
-              className="btn w-100 mt-5 py-3"
+              className="btn w-100 mt-5 py-3 text-white fw-semibold d-flex align-items-center justify-content-center gap-2"
               style={{
-                background:
-                  "linear-gradient(135deg,#0F9D9A,#3CC8C3)",
-                color: "#fff",
+                background: isGenerating
+                  ? "#80CBC4"
+                  : "linear-gradient(135deg,#0F9D9A,#3CC8C3)",
                 border: "none",
                 borderRadius: "12px",
-                fontWeight: "600",
                 fontSize: "18px",
               }}
+              disabled={isGenerating}
             >
-              ✨ Generate AI Interview
+              {isGenerating ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Generating Interview Questions with AI...
+                </>
+              ) : (
+                "✨ Generate AI Interview"
+              )}
             </button>
           </div>
         </div>

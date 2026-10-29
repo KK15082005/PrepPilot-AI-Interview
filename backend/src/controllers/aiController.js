@@ -1,17 +1,22 @@
 const interviewModel = require("../model/interviewSchema");
-const {generateQuestions} = require("../services/aiService");
+const { generateQuestions } = require("../services/aiService");
 const questionModel = require("../model/questionSchema");
 
-async function startInterview(req,res){
-    try{
-        const {interviewId} = req.body ;
-        const interview = await interviewModel.findById(interviewId);
+async function startInterview(req, res) {
+    try {
+        const { interviewId } = req.body;
+        const interview = await interviewModel.findOne({
+            _id: interviewId,
+            user: req.user._id
+        });
+
         if (!interview) {
             return res.status(404).json({
                 success: false,
-                message: "Interview Not Found"
+                message: "Interview Not Found or unauthorized"
             });
         }
+
         const existingQuestions = await questionModel.find({ interviewId });
 
         if (existingQuestions.length > 0) {
@@ -23,28 +28,27 @@ async function startInterview(req,res){
         }
 
         const questions = await generateQuestions(interview);
-        for(const q of questions){
-            await questionModel.create({
-                interviewId : interviewId ,
-                question : q.question,
-                questionType : q.questionType ,
-                topic : q.topic ,
 
-            });
-        }
+        const savedQuestions = await questionModel.insertMany(
+            questions.map((q) => ({
+                interviewId: interviewId,
+                question: q.question,
+                questionType: q.questionType,
+                topic: q.topic
+            }))
+        );
+
         return res.status(200).json({
-            success : true ,
-            message : "Questions Generated SuccessFully !",
-            questions
-            
+            success: true,
+            message: "Questions Generated Successfully!",
+            questions: savedQuestions
         });
-    }catch(err){
+    } catch (err) {
         return res.status(500).json({
-            success : false ,
-            message : err.message
+            success: false,
+            message: err.message
         });
     }
 }
 
-
-module.exports = {startInterview};
+module.exports = { startInterview };
