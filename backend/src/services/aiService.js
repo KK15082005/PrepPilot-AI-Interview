@@ -73,7 +73,7 @@ async function evaluateAnswers(question , answer){
     {
     "score" : 8 ,
     "feedback" : "Good answer......",
-    "strengths" : ["Good Understanding" ,  "Correct terminogies used" , .....],
+    "strengths" : ["Good Understanding" ,  "Correct terminogies used"],
     "weaknesses" : ["Missed Important point" ,  "UnderConfident"],
     "accurateAnswer" : "The ideal answer for interview can be this give short + good for interview answer"
     }
@@ -95,8 +95,8 @@ async function generateFinalFeedback (results){
         You are an expert Interviewer.
         A candidate has completed an interview. 
         Average Score  : ${results.averageScore}/10 
-        stengths : ${results.strengths.join(", ")}
-        weakness : ${results.weakness.join(", ")}
+        strengths : ${results.strengths?.length ? results.strengths.join(", ") : "General competence shown"}
+        weaknesses : ${results.weakness?.length ? results.weakness.join(", ") : "Minor areas for improvement"}
 
     Return ONLY JSON in this format :
     {

@@ -35,7 +35,8 @@ const answerSchema = new mongoose.Schema({
     },
     weakness : {
         type : [String] ,
-        default : []
+        default : [],
+        alias : "weaknesses"
     },
     accurateAnswer : {
         type : String 
