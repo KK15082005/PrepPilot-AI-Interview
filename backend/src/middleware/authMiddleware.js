@@ -1,30 +1,29 @@
-const jwt = require("jsonwebtoken") ;
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const JWT_SECRET = process.env.JWT_SECRET ;
+const JWT_SECRET = process.env.JWT_SECRET;
 
-const verifyToken = (req , res , next)=>{
-    try{
-        const token = req.headers.authorization?.split(" ")[1] || req.cookies.accessToken ;
+const verifyToken = (req, res, next) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1] || req.cookies?.accessToken;
 
-        if(!token){
+        if (!token) {
             return res.status(401).json({
-                message : "Token Not Found"
+                message: "Token Not Found"
             });
         }
 
-        const decoded = jwt.verify(token , JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         req.user = {
-            _id : decoded.id
-        }
+            _id: decoded.id
+        };
         next();
-    }catch(err){
-        console.error(err) ;
-        console.log("JWT Secret:", JWT_SECRET);
+    } catch (err) {
+        console.error("Auth Middleware Error:", err.message);
         return res.status(401).json({
-            message : "INVALID TOKEN"
-        })
+            message: "INVALID TOKEN"
+        });
     }
-}
+};
 
-module.exports = verifyToken ;
+module.exports = verifyToken;

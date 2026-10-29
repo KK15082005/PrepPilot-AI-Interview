@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getQuestions } from "../services/QuestionServices";
-import axios from "axios";
+import API from "../services/api";
 
 function Interview() {
     const { interviewId } = useParams();
@@ -159,22 +159,13 @@ function Interview() {
         setStatusMessage(null);
 
         try {
-            const token = localStorage.getItem("token");
             const currentQ = questions[currentQuestion];
 
-            const response = await axios.post(
-                "http://localhost:3000/api/answer/submit",
-                {
-                    interviewId,
-                    questionId: currentQ._id,
-                    answer: answer.trim(),
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const response = await API.post("/answer/submit", {
+                interviewId,
+                questionId: currentQ._id,
+                answer: answer.trim(),
+            });
 
             const evaluatedAnswer = response.data?.answer;
 
