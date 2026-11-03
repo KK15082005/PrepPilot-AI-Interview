@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FiEye, FiPlay, FiTrash2, FiPlus, FiFilter, FiCalendar, FiClock, FiAward } from "react-icons/fi";
+import { FiEye, FiPlay, FiTrash2, FiPlus, FiClock, FiAward, FiCheckCircle } from "react-icons/fi";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import API from "../services/api";
@@ -95,7 +95,7 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
 
     const getScoreBadge = (scoreStr) => {
         if (!scoreStr || scoreStr === "-") {
-            return <span className="text-muted fw-medium" style={{ fontSize: "13px" }}>Not Graded</span>;
+            return <span className="text-muted fw-medium" style={{ fontSize: "12px" }}>Not Graded</span>;
         }
 
         const num = parseFloat(scoreStr);
@@ -120,53 +120,58 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
         return (
             <span
                 className="badge px-2 py-1 rounded-pill fw-bold d-inline-flex align-items-center gap-1"
-                style={{ background: bg, color: color, border: `1px solid ${border}`, fontSize: "13px" }}
+                style={{ background: bg, color: color, border: `1px solid ${border}`, fontSize: "12px" }}
             >
-                <FiAward size={13} /> {num} <small style={{ opacity: 0.8, fontSize: "10px" }}>/ 10</small>
+                <FiAward size={12} /> {num} <small style={{ opacity: 0.8, fontSize: "10px" }}>/ 10</small>
             </span>
         );
     };
 
     return (
         <div
-            className="card shadow-sm border-0 mt-4 overflow-hidden"
+            className="card shadow-sm border-0 mt-3 mt-md-4 overflow-hidden"
             style={{ borderRadius: "20px", background: "#FFFFFF", border: "1px solid #E2E8F0" }}
         >
             <div className="card-body p-3 p-md-4">
-                {/* Header Controls: Title & Action Button */}
-                <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                {/* Header Title & New Session Button */}
+                <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                     <div>
-                        <h4 className="mb-1 fw-bold" style={{ color: "#0F172A", fontSize: "1.25rem" }}>
+                        <h4 className="mb-0 fw-bold" style={{ color: "#0F172A", fontSize: "clamp(1.1rem, 2vw, 1.25rem)" }}>
                             Interview Sessions
                         </h4>
-                        <small className="text-secondary">
-                            Track your past mock sessions, AI evaluations, and performance improvements.
+                        <small className="text-secondary d-none d-sm-block mt-0.5">
+                            Track your past mock sessions, review AI evaluations, or practice again.
                         </small>
                     </div>
 
                     <Link to="/createinterview" className="text-decoration-none">
                         <button
-                            className="btn btn-sm px-3 py-2 fw-semibold text-white d-inline-flex align-items-center gap-2 shadow-sm"
+                            className="btn btn-sm px-3 py-2 fw-semibold text-white d-inline-flex align-items-center gap-1.5 shadow-sm"
                             style={{
                                 background: "linear-gradient(135deg, #0F9D9A, #3CC8C3)",
                                 borderRadius: "10px",
-                                border: "none"
+                                border: "none",
+                                fontSize: "13px"
                             }}
                         >
-                            <FiPlus size={16} /> New Session
+                            <FiPlus size={15} /> <span>New Session</span>
                         </button>
                     </Link>
                 </div>
 
-                {/* Filter Tabs */}
-                <div className="d-flex align-items-center gap-2 border-bottom pb-3 mb-4 flex-wrap">
+                {/* Filter Tabs (Horizontal scroll on mobile to avoid vertical stacking) */}
+                <div
+                    className="d-flex align-items-center gap-2 border-bottom pb-3 mb-3 overflow-x-auto flex-nowrap"
+                    style={{ WebkitOverflowScrolling: "touch" }}
+                >
                     <button
-                        className={`btn btn-sm px-3 py-1 rounded-pill fw-semibold ${
+                        className={`btn btn-sm px-3 py-1.5 rounded-pill fw-semibold text-nowrap flex-shrink-0 ${
                             activeTab === "all" ? "text-white" : "text-secondary btn-light border"
                         }`}
                         style={{
                             background: activeTab === "all" ? "#0F9D9A" : "#F8FAFC",
-                            border: activeTab === "all" ? "none" : "1px solid #E2E8F0"
+                            border: activeTab === "all" ? "none" : "1px solid #E2E8F0",
+                            fontSize: "12px"
                         }}
                         onClick={() => setActiveTab("all")}
                     >
@@ -174,12 +179,13 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                     </button>
 
                     <button
-                        className={`btn btn-sm px-3 py-1 rounded-pill fw-semibold ${
+                        className={`btn btn-sm px-3 py-1.5 rounded-pill fw-semibold text-nowrap flex-shrink-0 ${
                             activeTab === "completed" ? "text-white" : "text-secondary btn-light border"
                         }`}
                         style={{
                             background: activeTab === "completed" ? "#0F9D9A" : "#F8FAFC",
-                            border: activeTab === "completed" ? "none" : "1px solid #E2E8F0"
+                            border: activeTab === "completed" ? "none" : "1px solid #E2E8F0",
+                            fontSize: "12px"
                         }}
                         onClick={() => setActiveTab("completed")}
                     >
@@ -187,12 +193,13 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                     </button>
 
                     <button
-                        className={`btn btn-sm px-3 py-1 rounded-pill fw-semibold ${
+                        className={`btn btn-sm px-3 py-1.5 rounded-pill fw-semibold text-nowrap flex-shrink-0 ${
                             activeTab === "ongoing" ? "text-white" : "text-secondary btn-light border"
                         }`}
                         style={{
                             background: activeTab === "ongoing" ? "#0F9D9A" : "#F8FAFC",
-                            border: activeTab === "ongoing" ? "none" : "1px solid #E2E8F0"
+                            border: activeTab === "ongoing" ? "none" : "1px solid #E2E8F0",
+                            fontSize: "12px"
                         }}
                         onClick={() => setActiveTab("ongoing")}
                     >
@@ -211,23 +218,23 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                     <div className="text-center py-5 my-2">
                         <div
                             style={{
-                                width: "64px",
-                                height: "64px",
+                                width: "60px",
+                                height: "60px",
                                 background: "#E6F8F7",
                                 borderRadius: "50%",
                                 display: "inline-flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 color: "#0F9D9A",
-                                fontSize: "28px"
+                                fontSize: "26px"
                             }}
                         >
                             🎤
                         </div>
-                        <h5 className="mt-3 fw-bold" style={{ color: "#0F172A" }}>
+                        <h5 className="mt-3 fw-bold" style={{ color: "#0F172A", fontSize: "16px" }}>
                             {searchQuery ? "No matching interviews found" : "No mock interviews yet"}
                         </h5>
-                        <p className="text-secondary mb-3" style={{ maxWidth: "420px", margin: "0 auto", fontSize: "14px" }}>
+                        <p className="text-secondary mb-3" style={{ maxWidth: "400px", margin: "0 auto", fontSize: "13px" }}>
                             {searchQuery
                                 ? `No interviews match "${searchQuery}". Check spelling or try a broader term.`
                                 : "Start practicing technical and HR questions tailored specifically to your target role."}
@@ -243,7 +250,7 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                             <Link to="/createinterview">
                                 <button
                                     className="btn px-4 py-2 text-white fw-semibold shadow-sm"
-                                    style={{ background: "#0F9D9A", borderRadius: "10px", border: "none" }}
+                                    style={{ background: "#0F9D9A", borderRadius: "10px", border: "none", fontSize: "14px" }}
                                 >
                                     Create Your First Interview
                                 </button>
@@ -364,7 +371,7 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                             </table>
                         </div>
 
-                        {/* Mobile Responsive Cards View (< 768px) */}
+                        {/* Mobile Responsive Card List View (< 768px) */}
                         <div className="d-md-none d-flex flex-column gap-3">
                             {filteredInterviews.map((item) => {
                                 const isCompleted = item.status === "Completed";
@@ -376,18 +383,19 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                                         className="card border p-3 rounded-4 shadow-sm"
                                         style={{ background: "#FFFFFF", borderColor: "#E2E8F0" }}
                                     >
+                                        {/* Card Header: Role & Status */}
                                         <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
-                                            <div>
-                                                <h6 className="fw-bold mb-1" style={{ color: "#0F172A" }}>
+                                            <div style={{ minWidth: 0 }}>
+                                                <h6 className="fw-bold mb-0 text-truncate" style={{ color: "#0F172A", fontSize: "15px" }}>
                                                     {item.role || "Developer"}
                                                 </h6>
-                                                <small className="text-muted d-block" style={{ fontSize: "12px" }}>
+                                                <small className="text-muted d-block text-truncate mt-0.5" style={{ fontSize: "12px" }}>
                                                     {item.title || "Mock Session"} • {formatDate(item.createdAt)}
                                                 </small>
                                             </div>
 
                                             <span
-                                                className={`badge rounded-pill ${
+                                                className={`badge rounded-pill flex-shrink-0 ${
                                                     isCompleted
                                                         ? "bg-success"
                                                         : isOngoing
@@ -400,7 +408,8 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                                             </span>
                                         </div>
 
-                                        <div className="d-flex align-items-center gap-2 flex-wrap my-2">
+                                        {/* Metadata Row: Badges */}
+                                        <div className="d-flex align-items-center gap-1.5 flex-wrap my-2">
                                             <span className="badge bg-light text-dark border px-2 py-1 rounded-pill" style={{ fontSize: "11px" }}>
                                                 {item.interviewType || "Technical"}
                                             </span>
@@ -413,38 +422,39 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                                             </div>
                                         </div>
 
-                                        <div className="d-flex align-items-center justify-content-between gap-2 mt-3 pt-2 border-top">
-                                            <div className="d-flex gap-2 w-100">
-                                                {isCompleted ? (
-                                                    <button
-                                                        className="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center gap-1 w-100 py-2 rounded-3 fw-semibold"
-                                                        onClick={() => navigate(`/interview/${item._id}/result`)}
-                                                    >
-                                                        <FiEye size={14} /> View Result
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        className="btn btn-sm text-white d-flex align-items-center justify-content-center gap-1 w-100 py-2 rounded-3 fw-semibold"
-                                                        onClick={() => navigate(`/interview/${item._id}`)}
-                                                        style={{ background: "#0F9D9A", border: "none" }}
-                                                    >
-                                                        <FiPlay size={14} /> Resume Practice
-                                                    </button>
-                                                )}
-
+                                        {/* Action Buttons: 44px min touch target */}
+                                        <div className="d-flex align-items-center gap-2 mt-3 pt-2 border-top">
+                                            {isCompleted ? (
                                                 <button
-                                                    className="btn btn-sm btn-outline-danger p-2 rounded-3 flex-shrink-0"
-                                                    onClick={(e) => handleDelete(item._id, e)}
-                                                    disabled={deletingId === item._id}
-                                                    title="Delete Interview"
+                                                    className="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center gap-1.5 flex-grow-1 fw-semibold"
+                                                    onClick={() => navigate(`/interview/${item._id}/result`)}
+                                                    style={{ height: "42px", borderRadius: "10px", fontSize: "13px" }}
                                                 >
-                                                    {deletingId === item._id ? (
-                                                        <span className="spinner-border spinner-border-sm" role="status"></span>
-                                                    ) : (
-                                                        <FiTrash2 size={16} />
-                                                    )}
+                                                    <FiEye size={15} /> View AI Report
                                                 </button>
-                                            </div>
+                                            ) : (
+                                                <button
+                                                    className="btn btn-sm text-white d-flex align-items-center justify-content-center gap-1.5 flex-grow-1 fw-semibold shadow-sm"
+                                                    onClick={() => navigate(`/interview/${item._id}`)}
+                                                    style={{ background: "#0F9D9A", border: "none", height: "42px", borderRadius: "10px", fontSize: "13px" }}
+                                                >
+                                                    <FiPlay size={15} /> Resume Practice
+                                                </button>
+                                            )}
+
+                                            <button
+                                                className="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center flex-shrink-0"
+                                                onClick={(e) => handleDelete(item._id, e)}
+                                                disabled={deletingId === item._id}
+                                                title="Delete Interview"
+                                                style={{ width: "42px", height: "42px", borderRadius: "10px" }}
+                                            >
+                                                {deletingId === item._id ? (
+                                                    <span className="spinner-border spinner-border-sm" role="status"></span>
+                                                ) : (
+                                                    <FiTrash2 size={16} />
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
                                 );

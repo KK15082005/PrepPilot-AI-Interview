@@ -99,6 +99,8 @@ a:hover {
     left: 0;
     transform: translateX(-100%);
     box-shadow: none;
+    visibility: hidden;
+    pointer-events: none;
   }
   .sidebar-mobile-open {
     position: fixed !important;
@@ -106,6 +108,8 @@ a:hover {
     left: 0;
     transform: translateX(0);
     box-shadow: 0 0 50px rgba(15, 23, 42, 0.25);
+    visibility: visible;
+    pointer-events: auto;
   }
 }
 

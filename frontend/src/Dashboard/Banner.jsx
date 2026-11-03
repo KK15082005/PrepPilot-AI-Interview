@@ -1,5 +1,5 @@
 import React from "react";
-import { FiPlus, FiArrowRight } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 function Banner() {
@@ -12,11 +12,11 @@ function Banner() {
 
     return (
         <div
-            className="p-4 p-md-5 rounded-4 position-relative overflow-hidden shadow-sm"
+            className="p-3 p-sm-4 p-md-5 rounded-4 position-relative overflow-hidden shadow-sm"
             style={{
                 background: "linear-gradient(135deg, #0A2540 0%, #0F3A4C 60%, #0F9D9A 100%)",
                 color: "#FFFFFF",
-                borderRadius: "24px"
+                borderRadius: "22px"
             }}
         >
             {/* Subtle background glow effect */}
@@ -33,16 +33,16 @@ function Banner() {
                 }}
             />
 
-            <div className="row align-items-center g-4 position-relative" style={{ zIndex: 1 }}>
+            <div className="row align-items-center g-3 g-md-4 position-relative" style={{ zIndex: 1 }}>
                 <div className="col-lg-8 col-md-7">
                     <span
-                        className="badge px-3 py-1 rounded-pill fw-semibold mb-3 d-inline-flex align-items-center gap-1"
+                        className="badge px-3 py-1 rounded-pill fw-semibold mb-2 mb-sm-3 d-inline-flex align-items-center gap-1"
                         style={{
                             background: "rgba(255, 255, 255, 0.15)",
                             backdropFilter: "blur(8px)",
                             border: "1px solid rgba(255, 255, 255, 0.25)",
                             color: "#FFFFFF",
-                            fontSize: "12px"
+                            fontSize: "11px"
                         }}
                     >
                         <i className="bi bi-stars text-warning"></i> GEMINI AI INTERVIEW COACH
@@ -52,7 +52,7 @@ function Banner() {
                         style={{
                             fontWeight: "800",
                             lineHeight: "1.25",
-                            fontSize: "clamp(1.5rem, 3.2vw, 2.2rem)",
+                            fontSize: "clamp(1.35rem, 3.2vw, 2.1rem)",
                             letterSpacing: "-0.02em"
                         }}
                         className="mb-2"
@@ -61,17 +61,17 @@ function Banner() {
                     </h2>
 
                     <p
-                        className="text-white-50 mt-2 mb-4"
-                        style={{ maxWidth: "520px", fontSize: "14px", lineHeight: "1.6" }}
+                        className="text-white-50 mt-1 mb-3 mb-sm-4"
+                        style={{ maxWidth: "520px", fontSize: "13px", lineHeight: "1.6" }}
                     >
-                        Conduct tailored technical and behavioral mock sessions with live audio speech recognition,
-                        instant scoring, detailed weaknesses, and AI model answers.
+                        Conduct tailored mock interviews with speech recognition, real-time timer,
+                        instant scoring, detailed weaknesses, and ideal model answers.
                     </p>
 
-                    <div className="d-flex align-items-center gap-3 flex-wrap">
-                        <Link to="/createinterview" className="text-decoration-none">
+                    <div className="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">
+                        <Link to="/createinterview" className="text-decoration-none w-100 w-sm-auto">
                             <button
-                                className="btn px-4 py-3 fw-bold text-dark shadow-sm d-inline-flex align-items-center gap-2"
+                                className="btn w-100 px-4 py-2 py-sm-3 fw-bold text-dark shadow-sm d-inline-flex align-items-center justify-content-center gap-2"
                                 style={{
                                     background: "#FFFFFF",
                                     borderRadius: "12px",
@@ -83,23 +83,28 @@ function Banner() {
                                 <FiPlus size={18} style={{ color: "#0F9D9A" }} /> Create Custom Interview
                             </button>
                         </Link>
+                    </div>
 
-                        <div className="d-none d-sm-flex align-items-center gap-2 text-white-50" style={{ fontSize: "13px" }}>
-                            <span>Quick start:</span>
-                            {quickRoles.slice(0, 2).map((role) => (
-                                <Link
-                                    key={role}
-                                    to="/createinterview"
-                                    className="badge text-white text-decoration-none px-2 py-1 rounded-pill"
-                                    style={{
-                                        background: "rgba(255, 255, 255, 0.12)",
-                                        border: "1px solid rgba(255, 255, 255, 0.2)"
-                                    }}
-                                >
-                                    {role}
-                                </Link>
-                            ))}
-                        </div>
+                    {/* Quick Start Role Pills (Visible & Scrollable on Mobile) */}
+                    <div className="d-flex align-items-center gap-2 mt-3 pt-1 flex-nowrap overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: "touch" }}>
+                        <small className="text-white-50 text-nowrap" style={{ fontSize: "12px" }}>
+                            Quick roles:
+                        </small>
+                        {quickRoles.map((role) => (
+                            <Link
+                                key={role}
+                                to="/createinterview"
+                                className="badge text-white text-decoration-none px-2.5 py-1.5 rounded-pill text-nowrap flex-shrink-0"
+                                style={{
+                                    background: "rgba(255, 255, 255, 0.12)",
+                                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                                    fontSize: "11px",
+                                    fontWeight: "500"
+                                }}
+                            >
+                                {role}
+                            </Link>
+                        ))}
                     </div>
                 </div>
 
@@ -118,7 +123,7 @@ function Banner() {
                             alt="Interview Target Goal"
                             className="img-fluid rounded-3"
                             style={{
-                                maxHeight: "170px",
+                                maxHeight: "160px",
                                 objectFit: "cover"
                             }}
                         />
