@@ -15,26 +15,28 @@ function DashboardPage() {
     };
 
     return (
-        <div className="d-flex" style={{ minHeight: "100vh", background: "#FCFEFE" }}>
+        <div className="d-flex" style={{ minHeight: "100vh", background: "#F8FAFC" }}>
             {/* Sidebar (Responsive drawer on mobile, fixed column on desktop) */}
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
             {/* Main Content Area */}
             <main
-                className="flex-grow-1 p-3 p-md-4"
+                className="flex-grow-1 p-3 p-md-4 p-xl-5"
                 style={{
                     minWidth: 0,
                     overflowX: "hidden"
                 }}
             >
-                <Topbar
-                    searchQuery={searchQuery}
-                    onSearchChange={setSearchQuery}
-                    onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
-                />
-                <Banner />
-                <Stats refreshTrigger={refreshTrigger} />
-                <ReactInterviews searchQuery={searchQuery} onDataChanged={handleDataChanged} />
+                <div style={{ maxWidth: "1340px", margin: "0 auto" }}>
+                    <Topbar
+                        searchQuery={searchQuery}
+                        onSearchChange={setSearchQuery}
+                        onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+                    />
+                    <Banner />
+                    <Stats refreshTrigger={refreshTrigger} />
+                    <ReactInterviews searchQuery={searchQuery} onDataChanged={handleDataChanged} />
+                </div>
             </main>
         </div>
     );
