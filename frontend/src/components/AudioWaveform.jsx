@@ -149,3 +149,4 @@ function AudioWaveform({ isListening }) {
 }
 
 export default AudioWaveform;
+
