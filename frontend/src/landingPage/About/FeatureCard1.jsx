@@ -1,144 +1,101 @@
 import React from "react";
 
 function FeatureCard1() {
+  const features = [
+    {
+      icon: "bi bi-stars",
+      title: "AI Interview Simulation",
+      desc: "Realistic, contextual mock interviews dynamically tailored to your role, experience, and difficulty level."
+    },
+    {
+      icon: "bi bi-mic",
+      title: "Voice & Speech Recognition",
+      desc: "Speak naturally using speech-to-text or type your responses. Experience realistic conversational audio with text-to-speech."
+    },
+    {
+      icon: "bi bi-cpu",
+      title: "Intelligent AI Evaluation",
+      desc: "Instant scoring based on accuracy, technical terminology, depth, and communication clarity."
+    },
+    {
+      icon: "bi bi-file-earmark-text",
+      title: "Granular Feedback & Ideal Answers",
+      desc: "Pinpointed strengths, missed points, and model ideal answers provided for every single question."
+    }
+  ];
+
   return (
-    <div className="container text-center mt-5">
-      <small
-        className="mt-3"
+    <div className="container text-center mt-5 pt-3">
+      <span
+        className="d-inline-flex px-3 py-1 rounded-pill mb-2 fw-semibold"
         style={{
-          border: "1px solid #1a8f8b",
-          borderRadius: "999px",
-          padding: "3px 10px",
-          fontSize: "15px",
-          fontWeight: "600",
-          background: "#DDF4F6",
-          color: "#1a8f8b",
+          border: "1px solid #C4F1ED",
+          fontSize: "13px",
+          background: "#E8FAF8",
+          color: "#0F9D9A",
         }}
       >
-        Powerful Features
-      </small>
+        POWERFUL CAPABILITIES
+      </span>
 
-      <h3
-        className="mt-2 mb-4"
-        style={{ fontSize: "20px", fontWeight: "600" }}
+      <h2
+        className="fw-bold mb-2 display-6"
+        style={{ color: "#0F172A", fontSize: "2rem" }}
       >
-        Everything You need to Ace Your Interview
-      </h3>
+        Everything You Need to Ace Your Next Interview
+      </h2>
+      <p className="text-secondary mb-5" style={{ maxWidth: "560px", margin: "0 auto 3rem" }}>
+        Designed by engineers for candidates who want objective, stress-free mock interview practice.
+      </p>
 
       <div className="row g-4">
-
-        {/* Card 1 */}
-        <div className="col-12 col-sm-6 col-lg-3">
-          <div
-            className="card h-100"
-            style={{
-              border: "1px solid #1a8f8b",
-              boxShadow: "0 8px 20px rgba(105,213,233,0.4)",
-            }}
-          >
-            <div className="card-body">
-              <i
-                className="bi bi-stars"
+        {features.map((item, idx) => (
+          <div className="col-12 col-sm-6 col-lg-3" key={idx}>
+            <div
+              className="card h-100 border-0 p-4 text-start"
+              style={{
+                borderRadius: "18px",
+                background: "#FFFFFF",
+                border: "1px solid #EAF3F3",
+                boxShadow: "0 4px 20px rgba(15, 23, 42, 0.04)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-4px)";
+                e.currentTarget.style.boxShadow = "0 12px 30px rgba(15, 157, 154, 0.12)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 20px rgba(15, 23, 42, 0.04)";
+              }}
+            >
+              <div
                 style={{
-                  fontSize: "40px",
-                  color: "#3CC8C3",
+                  width: "52px",
+                  height: "52px",
+                  borderRadius: "14px",
+                  background: "#E6F8F7",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#0F9D9A",
+                  fontSize: "24px",
+                  marginBottom: "18px",
                 }}
-              ></i>
+              >
+                <i className={item.icon}></i>
+              </div>
 
-              <h5 className="card-title mt-3">AI Interview Simulation</h5>
+              <h5 className="fw-bold mb-2" style={{ color: "#0F172A", fontSize: "17px" }}>
+                {item.title}
+              </h5>
 
-              <p className="card-text text-secondary">
-                Realistic AI-Powered interviews tailored to your role and
-                experience.
+              <p className="text-secondary mb-0" style={{ fontSize: "14px", lineHeight: "1.6" }}>
+                {item.desc}
               </p>
             </div>
           </div>
-        </div>
-
-        {/* Card 2 */}
-        <div className="col-12 col-sm-6 col-lg-3">
-          <div
-            className="card h-100"
-            style={{
-              border: "1px solid #1a8f8b",
-              boxShadow: "0 8px 20px rgba(105,213,233,0.4)",
-            }}
-          >
-            <div className="card-body">
-              <i
-                className="bi bi-mic"
-                style={{
-                  fontSize: "40px",
-                  color: "#3CC8C3",
-                }}
-              ></i>
-
-              <h5 className="card-title mt-3">Voice & Text Answering</h5>
-
-              <p className="card-text text-secondary">
-                Answer by speaking or typing. Our AI understands and evaluates
-                your responses.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 3 */}
-        <div className="col-12 col-sm-6 col-lg-3">
-          <div
-            className="card h-100"
-            style={{
-              border: "1px solid #1a8f8b",
-              boxShadow: "0 8px 20px rgba(105,213,233,0.4)",
-            }}
-          >
-            <div className="card-body">
-              <i
-                className="bi bi-clock"
-                style={{
-                  fontSize: "40px",
-                  color: "#3CC8C3",
-                }}
-              ></i>
-
-              <h5 className="card-title mt-3">AI Evaluation Engine</h5>
-
-              <p className="card-text text-secondary">
-                Advanced AI models evaluate your answers fairly and provide
-                accurate scores.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 4 */}
-        <div className="col-12 col-sm-6 col-lg-3">
-          <div
-            className="card h-100"
-            style={{
-              border: "1px solid #1a8f8b",
-              boxShadow: "0 8px 20px rgba(105,213,233,0.4)",
-            }}
-          >
-            <div className="card-body">
-              <i
-                className="bi bi-file-earmark-text"
-                style={{
-                  fontSize: "40px",
-                  color: "#3CC8C3",
-                }}
-              ></i>
-
-              <h5 className="card-title mt-3">Detailed Feedback</h5>
-
-              <p className="card-text text-secondary">
-                Get in-depth feedback with strengths, weaknesses and improvement
-                tips.
-              </p>
-            </div>
-          </div>
-        </div>
-
+        ))}
       </div>
     </div>
   );

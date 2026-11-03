@@ -8,6 +8,7 @@ import API from '../services/api';
 function Login() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -18,11 +19,13 @@ function Login() {
             ...formData,
             [e.target.name]: e.target.value
         });
+        setErrorMsg("");
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setErrorMsg("");
 
         try {
             const response = await API.post("/auth/login", {
@@ -36,7 +39,7 @@ function Login() {
 
         } catch (error) {
             console.error("Login Error:", error.response?.data || error.message);
-            alert(error.response?.data?.message || "Login Failed");
+            setErrorMsg(error.response?.data?.message || "Invalid email or password. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -45,37 +48,59 @@ function Login() {
     return (
         <div className='login'>
             <div className='login-card'>
-                <form onSubmit={handleSubmit}>
-                    <h1 className='text-center'>PrepPilot <span style={{ color: "#3CC8C3" }}>AI</span></h1>
-                    <br />
-                    <h2 className='text-center fw-bold'>Welcome back</h2>
-                    <small className='text-secondary d-block text-center mb-4'>Login to continue your interview prep</small>
+                <div className="text-center mb-4">
+                    <Link to="/" className="text-decoration-none">
+                        <h4 className="fw-bold mb-1" style={{ color: "#0F172A" }}>
+                            PrepPilot <span style={{ color: "#0F9D9A" }}>AI</span>
+                        </h4>
+                    </Link>
+                    <h3 className='fw-bold mt-2 mb-1' style={{ color: "#0F172A", fontSize: "22px" }}>
+                        Welcome Back
+                    </h3>
+                    <small className='text-secondary'>
+                        Log in to resume your mock interview preparation
+                    </small>
+                </div>
 
+                {errorMsg && (
+                    <div className="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center gap-2" style={{ fontSize: "14px" }}>
+                        <i className="bi bi-exclamation-circle-fill flex-shrink-0"></i>
+                        <span>{errorMsg}</span>
+                    </div>
+                )}
+
+                <form onSubmit={handleSubmit}>
                     <div className="mb-3">
+                        <label className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                            Email Address
+                        </label>
                         <div className='input-group'>
-                            <span className='input-group-text' style={{ color: "#3CC8C3" }}><MdEmail /></span>
+                            <span className='input-group-text bg-light text-secondary border-end-0'><MdEmail /></span>
                             <input
                                 type="email"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="form-control py-3"
-                                placeholder="Enter Your email"
+                                className="form-control py-2 ps-2 border-start-0"
+                                placeholder="name@example.com"
                                 required
                             />
                         </div>
                     </div>
 
                     <div className='mb-3'>
+                        <label className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                            Password
+                        </label>
                         <div className='input-group'>
-                            <span className='input-group-text' style={{ color: "#3CC8C3" }}><FaLock /></span>
+                            <span className='input-group-text bg-light text-secondary border-end-0'><FaLock /></span>
                             <input
                                 type="password"
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="form-control py-3"
-                                placeholder='Enter your Password'
+                                className="form-control py-2 ps-2 border-start-0"
+                                placeholder='Enter your password'
                                 required
                             />
                         </div>
@@ -83,8 +108,8 @@ function Login() {
 
                     <button
                         type='submit'
-                        className="btn w-100 py-3 mt-3 text-white fw-semibold d-flex align-items-center justify-content-center"
-                        style={{ background: "linear-gradient(135deg,#27b3ae,#3CC8C3)", border: "none", borderRadius: "10px" }}
+                        className="btn w-100 py-3 mt-3 text-white fw-semibold d-flex align-items-center justify-content-center shadow-sm"
+                        style={{ background: "linear-gradient(135deg,#0F9D9A,#3CC8C3)", border: "none", borderRadius: "10px" }}
                         disabled={loading}
                     >
                         {loading ? (
@@ -92,27 +117,13 @@ function Login() {
                                 <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                                 Logging in...
                             </>
-                        ) : "Login"}
+                        ) : "Sign In to Dashboard"}
                     </button>
 
-                    <div className="d-flex align-items-center my-4">
-                        <hr className="flex-grow-1" />
-                        <span className="mx-3 text-secondary">or continue with</span>
-                        <hr className="flex-grow-1" />
+                    <div className="text-center mt-4" style={{ fontSize: "14px" }}>
+                        <span className='text-secondary'>Don't have an account? </span>
+                        <Link to="/signup" style={{ color: "#0F9D9A", fontWeight: "600" }}>Create one for free</Link>
                     </div>
-
-                    <button type="button" className="btn btn-light border w-100 py-3 mb-2">
-                        <img src="/google.jpg" width="22" className="me-2" alt="Google" />Continue with Google
-                    </button>
-
-                    <button type="button" className="btn btn-light border w-100 py-3 mb-2">
-                        <img src="/github.svg" width="22" className="me-2" alt="GitHub" />Continue with Github
-                    </button>
-
-                    <br />
-                    <h6 className='text-secondary text-center mt-3'>
-                        Don't have an account? <span><Link to={"/signup"} style={{ color: "#27b3ae", fontWeight: "600" }}>Sign Up</Link></span>
-                    </h6>
                 </form>
             </div>
         </div>
