@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
     FiArrowLeft,
     FiPrinter,
@@ -10,7 +11,8 @@ import {
     FiLayers,
     FiChevronDown,
     FiChevronUp,
-    FiRefreshCw
+    FiRefreshCw,
+    FiCopy
 } from "react-icons/fi";
 import API from "../services/api";
 
@@ -42,10 +44,9 @@ function ResultPage() {
             } catch (err) {
                 console.error("Failed to load interview result:", err);
                 if (isMounted) {
-                    setError(
-                        err.response?.data?.message ||
-                        "Unable to load results for this interview."
-                    );
+                    const msg = err.response?.data?.message || "Unable to load results for this interview.";
+                    setError(msg);
+                    toast.error(msg);
                 }
             } finally {
                 if (isMounted) {
@@ -69,7 +70,14 @@ function ResultPage() {
     };
 
     const handlePrint = () => {
+        toast("Opening print dialog...", { icon: "🖨️", duration: 2500 });
         window.print();
+    };
+
+    const handleCopySummary = () => {
+        const text = `PrepPilot AI Report - ${interview?.role || "Mock Interview"}\nScore: ${avgScore}/10\nFeedback: ${result?.overallFeedback || "Completed"}`;
+        navigator.clipboard.writeText(text);
+        toast.success("Evaluation summary copied to clipboard!");
     };
 
     if (loading) {
@@ -154,7 +162,13 @@ function ResultPage() {
                         <FiArrowLeft /> Back to Dashboard
                     </button>
 
-                    <div className="d-flex gap-2">
+                    <div className="d-flex gap-2 flex-wrap">
+                        <button
+                            className="btn btn-sm btn-light border d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
+                            onClick={handleCopySummary}
+                        >
+                            <FiCopy /> Copy Summary
+                        </button>
                         <button
                             className="btn btn-sm btn-light border d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
                             onClick={handlePrint}

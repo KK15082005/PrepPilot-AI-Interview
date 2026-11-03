@@ -3,6 +3,7 @@ import "./Login.css";
 import { MdEmail } from "react-icons/md";
 import { FaLock } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import API from '../services/api';
 
 function Login() {
@@ -35,11 +36,16 @@ function Login() {
 
             localStorage.setItem("token", response.data.accessToken);
             localStorage.setItem("user", JSON.stringify(response.data.user));
+
+            const username = response.data?.user?.username || "Candidate";
+            toast.success(`Welcome back, ${username}!`);
             navigate("/dashboard");
 
         } catch (error) {
             console.error("Login Error:", error.response?.data || error.message);
-            setErrorMsg(error.response?.data?.message || "Invalid email or password. Please try again.");
+            const msg = error.response?.data?.message || "Invalid email or password. Please try again.";
+            setErrorMsg(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }

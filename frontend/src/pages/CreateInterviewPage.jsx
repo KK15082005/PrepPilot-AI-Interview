@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FiArrowLeft, FiAlertCircle } from "react-icons/fi";
+import toast from "react-hot-toast";
 import API from "../services/api";
 
 function CreateInterview() {
@@ -29,6 +30,8 @@ function CreateInterview() {
     setIsGenerating(true);
     setErrorMsg("");
 
+    const toastId = toast.loading("Generating AI mock interview questions...");
+
     try {
       // 1. Create Interview Record
       const response = await API.post("/interview/create-interview", {
@@ -44,16 +47,19 @@ function CreateInterview() {
       // 2. Generate questions via Gemini AI
       await API.post("/ai/start-interview", { interviewId });
 
+      toast.success("Interview created! Let's begin.", { id: toastId });
+
       // 3. Navigate directly to the newly created interview session
       navigate(`/interview/${interviewId}`);
 
     } catch (err) {
       console.error("Create Interview Error:", err);
-      setErrorMsg(
+      const friendlyMessage =
         err.response?.data?.message ||
         err.message ||
-        "Failed to generate AI interview questions. Please verify your connection and try again."
-      );
+        "Failed to generate AI interview questions. Please verify your connection and try again.";
+      setErrorMsg(friendlyMessage);
+      toast.error(friendlyMessage, { id: toastId });
     } finally {
       setIsGenerating(false);
     }

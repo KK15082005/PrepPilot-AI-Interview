@@ -1,6 +1,7 @@
 import React from "react";
 import { FiHome, FiMic, FiBarChart2, FiBookmark, FiFileText, FiSettings, FiLogOut, FiX } from "react-icons/fi";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import API from "../services/api";
 
 function Sidebar({ isOpen = false, onClose }) {
@@ -15,6 +16,7 @@ function Sidebar({ isOpen = false, onClose }) {
         } finally {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
+            toast.success("Signed out successfully.");
             navigate("/login");
         }
     };
