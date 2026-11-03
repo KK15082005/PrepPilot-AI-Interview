@@ -16,18 +16,18 @@ function DashboardPage() {
 
     return (
         <div className="d-flex" style={{ minHeight: "100vh", background: "#F8FAFC" }}>
-            {/* Sidebar (Responsive drawer on mobile, fixed column on desktop) */}
+            {/* Sidebar (Responsive off-canvas on mobile, fixed left navigation on desktop) */}
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
             {/* Main Content Area */}
             <main
-                className="flex-grow-1 p-3 p-md-4 p-xl-5"
+                className="flex-grow-1 p-3 p-sm-4 p-xl-5"
                 style={{
                     minWidth: 0,
                     overflowX: "hidden"
                 }}
             >
-                <div style={{ maxWidth: "1340px", margin: "0 auto" }}>
+                <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
                     <Topbar
                         searchQuery={searchQuery}
                         onSearchChange={setSearchQuery}
