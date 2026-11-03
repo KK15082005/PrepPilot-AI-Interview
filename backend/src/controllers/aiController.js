@@ -17,6 +17,12 @@ async function startInterview(req, res) {
             });
         }
 
+        // Update status to Ongoing if currently Pending
+        if (interview.status === "Pending") {
+            interview.status = "Ongoing";
+            await interview.save();
+        }
+
         const existingQuestions = await questionModel.find({ interviewId });
 
         if (existingQuestions.length > 0) {

@@ -1,12 +1,14 @@
-const express = require("express") ;
+const express = require("express");
 const resultController = require("../controllers/resultController");
 const verifyToken = require("../middleware/authMiddleware");
 
-const resultRouter = express.Router() ;
+const resultRouter = express.Router();
+
 /**
- * /api/interview/getResult
+ * @route   GET /api/result/:interviewId
+ * @desc    Get or generate evaluation result for an interview
  */
-resultRouter.get("/:interviewId" , verifyToken , resultController.getResult) ;
+resultRouter.get("/:interviewId", verifyToken, resultController.getResult);
+resultRouter.post("/:interviewId", verifyToken, resultController.getResult);
 
-
-module.exports = resultRouter ;
+module.exports = resultRouter;

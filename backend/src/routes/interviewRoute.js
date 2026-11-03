@@ -12,6 +12,13 @@ interviewRouter.post("/create-interview", verifyToken, interviewController.creat
 interviewRouter.post("/", verifyToken, interviewController.createInterview);
 
 /**
+ * @route   GET /api/interview/stats
+ * @desc    Get dashboard metrics & stats for authenticated user
+ * @note    Must be declared BEFORE /:id so "stats" is not parsed as an :id parameter
+ */
+interviewRouter.get("/stats", verifyToken, interviewController.getDashboardStats);
+
+/**
  * @route   GET /api/interview/
  * @desc    Get all interviews for the authenticated user
  */
