@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import CreateInterview from './pages/CreateInterviewPage';
 import Interview from './pages/Interview';
+import ResultPage from './pages/ResultPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path='/dashboard' element={<DashboardPage />} />
         <Route path='/createinterview' element={<CreateInterview />} />
         <Route path='/interview/:interviewId' element={<Interview />} />
+        <Route path='/interview/:interviewId/result' element={<ResultPage />} />
       </Route>
 
       {/* 404 Not Found Route */}

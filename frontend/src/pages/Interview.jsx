@@ -219,6 +219,26 @@ function Interview() {
         }
     };
 
+    const handleFinishInterview = async () => {
+        window.speechSynthesis.cancel();
+        if (isListening && recognitionRef.current) {
+            recognitionRef.current.stop();
+            setIsListening(false);
+        }
+
+        // If candidate typed an answer but didn't submit it yet
+        if (answer.trim() && !submittedMap[currentQuestion]) {
+            const shouldSubmit = window.confirm(
+                "You have typed an answer that has not been submitted yet. Would you like to evaluate it before viewing final results?"
+            );
+            if (shouldSubmit) {
+                await handleSubmitAnswer();
+            }
+        }
+
+        navigate(`/interview/${interviewId}/result`);
+    };
+
     if (loading) {
         return (
             <div className="container text-center mt-5 py-5">
@@ -241,25 +261,34 @@ function Interview() {
 
     const current = questions[currentQuestion];
     const isCurrentSubmitted = Boolean(submittedMap[currentQuestion]);
+    const answeredCount = Object.keys(submittedMap).length;
 
     return (
         <div className="container mt-4 mb-5" style={{ maxWidth: "860px" }}>
             {/* Header */}
-            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                 <div>
                     <h3 className="fw-bold mb-1" style={{ color: "#183B56" }}>
                         🎤 AI Mock Interview
                     </h3>
                     <span className="text-secondary">
-                        Question {currentQuestion + 1} of {questions.length}
+                        Question {currentQuestion + 1} of {questions.length} • {answeredCount} answered
                     </span>
                 </div>
-                <div>
+
+                <div className="d-flex align-items-center gap-2">
                     {isCurrentSubmitted && (
                         <span className="badge bg-success-subtle text-success border border-success px-3 py-2 rounded-pill">
                             ✓ Answer Evaluated
                         </span>
                     )}
+                    <button
+                        className="btn btn-sm btn-outline-danger px-3 py-2 rounded-pill fw-semibold"
+                        onClick={handleFinishInterview}
+                        title="Finish interview and view AI score breakdown"
+                    >
+                        Finish & View Results
+                    </button>
                 </div>
             </div>
 
@@ -401,10 +430,7 @@ function Interview() {
                     <button
                         className="btn btn-success px-4 py-2 rounded-3 fw-semibold"
                         disabled={isEvaluating}
-                        onClick={() => {
-                            window.speechSynthesis.cancel();
-                            alert("Interview Completed! Great job practicing!");
-                        }}
+                        onClick={handleFinishInterview}
                     >
                         <i className="bi bi-check2-circle me-1"></i> Finish Interview
                     </button>
