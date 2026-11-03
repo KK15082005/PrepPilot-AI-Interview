@@ -12,24 +12,35 @@ function SignUp() {
         password: "",
         confirmPassword: ""
     });
+    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
+        setErrorMsg("");
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match");
+            setErrorMsg("Passwords do not match");
             return;
         }
 
+        if (formData.password.length < 6) {
+            setErrorMsg("Password must be at least 6 characters long");
+            return;
+        }
+
+        setLoading(true);
+        setErrorMsg("");
+
         try {
-            const response = await axios.post(
+            await axios.post(
                 "http://localhost:3000/api/auth/register",
                 {
                     username: formData.username,
@@ -38,140 +49,174 @@ function SignUp() {
                 }
             );
 
-            console.log(response.data);
-            alert("Registration Successful! Please login to continue.");
-
-            setFormData({
-                username: "",
-                email: "",
-                password: "",
-                confirmPassword: ""
-            });
-
             navigate("/login");
 
         } catch (error) {
             console.error(error.response?.data || error.message);
-            alert(error.response?.data?.message || "Registration Failed");
+            setErrorMsg(error.response?.data?.message || "Registration Failed. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="container-fluid">
-            <div className='row align-items-center' style={{ minHeight: "100vh" }}>
-                <div className="col-lg-6 mb-5 mt-0 text-center">
-                    <img src="/signup-img.png" alt="signup" style={{ maxWidth: "100%", maxHeight: "100%" }} />
-                </div>
-                <div className="col-lg-6 mt-4">
-                    <form onSubmit={handleSubmit} className="p-5 shadow-sm" style={{ background: "#fff", borderRadius: "20px", border: "1px solid #E8F4F4", maxWidth: "560px", margin: "0 auto" }}>
-                        <h2 style={{ fontWeight: "600" }}>Create Your <span style={{ color: "#3CC8C3" }}>PrepPilot</span> Account</h2>
-                        <small className='text-secondary'>Join thousands of learners and get interview ready</small>
-
-                        <div className="mb-3 mt-4">
-                            <label htmlFor="inputUsername" className="form-label" style={{ fontWeight: "500" }}>Username / Full Name</label>
-                            <div className='input-group'>
-                                <span className='input-group-text' style={{ color: "#3CC8C3" }}><FaUser /></span>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    className="form-control py-3"
-                                    id="inputUsername"
-                                    placeholder="Enter your username or full name"
-                                    required
-                                />
-                            </div>
+        <div
+            className="container-fluid py-4"
+            style={{
+                minHeight: "100vh",
+                background: "linear-gradient(135deg, #F8FCFC 0%, #EEF8F8 55%, #FCFEFE 100%)",
+                display: "flex",
+                alignItems: "center"
+            }}
+        >
+            <div className="container" style={{ maxWidth: "1080px" }}>
+                <div className='row align-items-center justify-content-center g-5'>
+                    {/* Illustration Column (Hidden on mobile for better UX) */}
+                    <div className="col-lg-6 d-none d-lg-block text-center">
+                        <img
+                            src="/signup-img.png"
+                            alt="PrepPilot Registration Illustration"
+                            style={{ maxWidth: "90%", height: "auto", filter: "drop-shadow(0 15px 30px rgba(15, 157, 154, 0.12))" }}
+                        />
+                        <div className="mt-4 text-center">
+                            <h4 className="fw-bold" style={{ color: "#0F172A" }}>Practice Without Pressure</h4>
+                            <p className="text-secondary" style={{ maxWidth: "380px", margin: "0 auto" }}>
+                                Personalized questions, instant speech analysis, and model answers to help you interview with confidence.
+                            </p>
                         </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="inputEmail" className="form-label" style={{ fontWeight: "500" }}>Email Address</label>
-                            <div className='input-group'>
-                                <span className='input-group-text' style={{ color: "#3CC8C3" }}><MdEmail /></span>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="form-control py-3"
-                                    id="inputEmail"
-                                    placeholder="Enter your email (name@example.com)"
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="inputPassword" className="form-label" style={{ fontWeight: "500", color: "#000000" }}>Password</label>
-                            <div className='input-group'>
-                                <span className='input-group-text' style={{ color: "#3CC8C3" }}><FaLock /></span>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    id="inputPassword"
-                                    className="form-control py-3"
-                                    aria-describedby="passwordHelpBlock"
-                                    placeholder='Create a Password'
-                                    required
-                                />
-                            </div>
-                            <div id="passwordHelpBlock" className="form-text">
-                                Your password must be at least 6 characters long.
-                            </div>
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="inputConfirmPassword" className="form-label" style={{ fontWeight: "500", color: "#000000" }}>Confirm Password</label>
-                            <div className='input-group'>
-                                <span className='input-group-text' style={{ color: "#3CC8C3" }}><FaLock /></span>
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    id="inputConfirmPassword"
-                                    className="form-control py-3"
-                                    placeholder='Confirm your Password'
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-check mt-3">
-                            <input className="form-check-input" type="checkbox" id="checkDefault" required />
-                            <label className="form-check-label" htmlFor="checkDefault">
-                                I agree to the <span style={{ color: "#3CC8C3" }}> Terms of Service</span> and <span style={{ color: "#3CC8C3" }}>Privacy Policy</span>
-                            </label>
-                        </div>
-
-                        <button
-                            type='submit'
-                            className="btn w-100 py-3 mt-4 text-white"
-                            style={{ background: "linear-gradient(135deg,#27b3ae,#3CC8C3)", border: "none", fontWeight: "600", borderRadius: "10px" }}
-                        >
-                            Create Account
-                        </button>
-
-                        <h6 className='text-secondary text-center mt-3'>
-                            Already have an account? <span><Link to="/login" style={{ color: "#27b3ae", textDecoration: "none", fontWeight: "600" }}>Login</Link></span>
-                        </h6>
-                    </form>
-
-                    <div className="d-flex align-items-center my-4" style={{ maxWidth: "560px", margin: "0 auto" }}>
-                        <hr className="flex-grow-1" />
-                        <span className="mx-3 text-secondary">or continue with</span>
-                        <hr className="flex-grow-1" />
                     </div>
 
-                    <div style={{ maxWidth: "560px", margin: "0 auto" }}>
-                        <button className="btn btn-light border w-100 py-3 mb-2 d-flex align-items-center justify-content-center">
-                            <img src="/google.jpg" width="22" className="me-2" alt="Google" />Continue with Google
-                        </button>
-                        <button className="btn btn-light border w-100 py-3 mb-2 d-flex align-items-center justify-content-center">
-                            <img src="/github.svg" width="22" className="me-2" alt="GitHub" />Continue with Github
-                        </button>
+                    {/* Form Column */}
+                    <div className="col-lg-6 col-md-9 col-12">
+                        <div
+                            className="p-4 p-sm-5 shadow-sm bg-white"
+                            style={{
+                                borderRadius: "24px",
+                                border: "1px solid #E2E8F0",
+                                maxWidth: "520px",
+                                margin: "0 auto"
+                            }}
+                        >
+                            <div className="mb-4 text-center text-sm-start">
+                                <Link to="/" className="text-decoration-none">
+                                    <h4 className="fw-bold mb-1" style={{ color: "#0F172A" }}>
+                                        PrepPilot <span style={{ color: "#0F9D9A" }}>AI</span>
+                                    </h4>
+                                </Link>
+                                <h3 className="fw-bold mt-2 mb-1" style={{ color: "#0F172A", fontSize: "22px" }}>
+                                    Create Your Account
+                                </h3>
+                                <small className='text-secondary'>
+                                    Join thousands of learners and get interview ready today.
+                                </small>
+                            </div>
+
+                            {errorMsg && (
+                                <div className="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center gap-2" style={{ fontSize: "14px" }}>
+                                    <i className="bi bi-exclamation-circle-fill flex-shrink-0"></i>
+                                    <span>{errorMsg}</span>
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="inputUsername" className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                                        Full Name / Username
+                                    </label>
+                                    <div className='input-group'>
+                                        <span className='input-group-text bg-light text-secondary border-end-0'><FaUser /></span>
+                                        <input
+                                            type="text"
+                                            name="username"
+                                            value={formData.username}
+                                            onChange={handleChange}
+                                            className="form-control py-2 ps-2 border-start-0"
+                                            id="inputUsername"
+                                            placeholder="e.g. Alex Morgan"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="inputEmail" className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                                        Email Address
+                                    </label>
+                                    <div className='input-group'>
+                                        <span className='input-group-text bg-light text-secondary border-end-0'><MdEmail /></span>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            className="form-control py-2 ps-2 border-start-0"
+                                            id="inputEmail"
+                                            placeholder="alex@example.com"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="inputPassword" className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                                        Password
+                                    </label>
+                                    <div className='input-group'>
+                                        <span className='input-group-text bg-light text-secondary border-end-0'><FaLock /></span>
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            id="inputPassword"
+                                            className="form-control py-2 ps-2 border-start-0"
+                                            placeholder='At least 6 characters'
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="inputConfirmPassword" className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                                        Confirm Password
+                                    </label>
+                                    <div className='input-group'>
+                                        <span className='input-group-text bg-light text-secondary border-end-0'><FaLock /></span>
+                                        <input
+                                            type="password"
+                                            name="confirmPassword"
+                                            value={formData.confirmPassword}
+                                            onChange={handleChange}
+                                            id="inputConfirmPassword"
+                                            className="form-control py-2 ps-2 border-start-0"
+                                            placeholder='Repeat your password'
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <button
+                                    type='submit'
+                                    className="btn w-100 py-3 mt-3 text-white fw-semibold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+                                    style={{ background: "linear-gradient(135deg,#0F9D9A,#3CC8C3)", border: "none", borderRadius: "10px" }}
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm" role="status"></span>
+                                            Creating Account...
+                                        </>
+                                    ) : (
+                                        "Create Free Account"
+                                    )}
+                                </button>
+
+                                <div className="text-center mt-3" style={{ fontSize: "14px" }}>
+                                    <span className='text-secondary'>Already have an account? </span>
+                                    <Link to="/login" style={{ color: "#0F9D9A", fontWeight: "600" }}>Login here</Link>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
