@@ -20,11 +20,27 @@ function safeJsonParse(text) {
     return JSON.parse(cleaned);
 }
 
-async function generateQuestions(interview) {
-    const model = pilotAI.getGenerativeModel({
-        model: "gemini-2.5-flash"
-    });
+// Call Gemini with automatic fallback across active models
+async function callGemini(prompt) {
+    const candidateModels = ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"];
+    let lastError = null;
 
+    for (const modelName of candidateModels) {
+        try {
+            const model = pilotAI.getGenerativeModel({ model: modelName });
+            const result = await model.generateContent(prompt);
+            const response = result.response.text();
+            return safeJsonParse(response);
+        } catch (err) {
+            console.warn(`Model ${modelName} error: ${err.message}. Trying next candidate...`);
+            lastError = err;
+        }
+    }
+
+    throw lastError || new Error("Failed to generate response from Gemini API.");
+}
+
+async function generateQuestions(interview) {
     let numberOfQuestions = 10;
     if (interview.duration == 15) {
         numberOfQuestions = 10;
@@ -34,7 +50,7 @@ async function generateQuestions(interview) {
         numberOfQuestions = 30;
     }
 
-    const prompt = `You are an experienced interviewer. Conduct a realistic interview.
+    const prompt = `You are an experienced technical interviewer. Conduct a realistic interview.
     Role: ${interview.role}
     Experience: ${interview.experienceLevel} 
     InterviewType: ${interview.interviewType}  
@@ -47,7 +63,7 @@ async function generateQuestions(interview) {
     1. If Interview type is Technical ask Technical questions.
     2. If Interview type is HR Generate HR round questions.
     3. If Interview type is Mixed Generate Technical + HR round questions.
-    4. Return ONLY a valid JSON array. Do not include markdown or extra conversation.
+    4. Return ONLY a valid JSON array. Do not include markdown codeblocks or extra conversation.
 
     Example format:
     [
@@ -60,16 +76,10 @@ async function generateQuestions(interview) {
     ]
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
-    return safeJsonParse(response);
+    return await callGemini(prompt);
 }
 
 async function evaluateAnswers(question, answer) {
-    const model = pilotAI.getGenerativeModel({
-        model: "gemini-2.5-flash"
-    });
-
     const prompt = `You are an expert interviewer.
     Evaluate the Candidate's answer thoroughly.
     Question: ${question}
@@ -86,16 +96,10 @@ async function evaluateAnswers(question, answer) {
     Score should be an integer between 1 and 10.
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
-    return safeJsonParse(response);
+    return await callGemini(prompt);
 }
 
 async function generateFinalFeedback(results) {
-    const model = pilotAI.getGenerativeModel({
-        model: "gemini-2.5-flash"
-    });
-
     const prompt = `You are an expert Interviewer.
     A candidate has completed their interview session. 
     Average Score: ${results.averageScore}/10 
@@ -120,9 +124,7 @@ async function generateFinalFeedback(results) {
     4. Highlight what they did well and specific ways to improve.
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
-    return safeJsonParse(response);
+    return await callGemini(prompt);
 }
 
 module.exports = { generateQuestions, evaluateAnswers, generateFinalFeedback };
