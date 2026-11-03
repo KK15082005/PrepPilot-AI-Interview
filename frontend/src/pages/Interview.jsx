@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { getQuestions } from "../services/QuestionServices";
 import API from "../services/api";
 
@@ -27,6 +28,7 @@ function Interview() {
                 setQuestions(data || []);
             } catch (err) {
                 console.error("Failed to fetch questions:", err);
+                toast.error("Failed to load interview questions. Please refresh.");
             } finally {
                 setLoading(false);
             }
@@ -35,11 +37,11 @@ function Interview() {
         fetchQuestions();
     }, [interviewId]);
 
-    // 🔊 Read question aloud whenever current question changes
+    // Read question aloud whenever current question changes
     useEffect(() => {
         if (questions.length === 0) return;
 
-        speakQuestion(questions[currentQuestion].question);
+        speakQuestion(questions[currentQuestion]?.question);
 
         return () => {
             window.speechSynthesis.cancel();
@@ -80,7 +82,7 @@ function Interview() {
             window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
-            alert("Speech Recognition is not supported in this browser. Please use Chrome or Edge, or type your answer.");
+            toast.error("Speech Recognition is not supported in this browser. Please use Chrome or Edge, or type your answer.");
             return;
         }
 
@@ -94,6 +96,7 @@ function Interview() {
 
             recognition.onstart = () => {
                 setIsListening(true);
+                toast("Listening to your voice...", { icon: "🎙️", duration: 2000 });
             };
 
             recognition.onresult = (event) => {
@@ -117,6 +120,9 @@ function Interview() {
             recognition.onerror = (event) => {
                 console.error("Speech Recognition Error:", event.error);
                 setIsListening(false);
+                if (event.error !== "no-speech") {
+                    toast.error(`Microphone error: ${event.error}`);
+                }
             };
 
             recognition.onend = () => {
@@ -128,6 +134,7 @@ function Interview() {
         } catch (err) {
             console.error("Speech recognition start failed:", err);
             setIsListening(false);
+            toast.error("Failed to access microphone. Please check permissions.");
         }
     };
 
@@ -143,6 +150,7 @@ function Interview() {
     // Dedicated Answer Submission Handler
     const handleSubmitAnswer = async () => {
         if (!answer || !answer.trim()) {
+            toast.error("Please type or speak an answer before submitting.");
             setStatusMessage({
                 type: "warning",
                 text: "Please provide an answer (by typing or speaking) before submitting.",
@@ -157,6 +165,7 @@ function Interview() {
 
         setIsEvaluating(true);
         setStatusMessage(null);
+        const toastId = toast.loading("Evaluating answer with Gemini AI...");
 
         try {
             const currentQ = questions[currentQuestion];
@@ -174,18 +183,24 @@ function Interview() {
                 [currentQuestion]: evaluatedAnswer || true,
             }));
 
+            const scoreText = evaluatedAnswer?.score !== undefined
+                ? `Answer Evaluated! Score: ${evaluatedAnswer.score}/10`
+                : "Answer Submitted and Evaluated Successfully!";
+
             setStatusMessage({
                 type: "success",
-                text: evaluatedAnswer?.score !== undefined
-                    ? `Answer Evaluated! Score: ${evaluatedAnswer.score}/10`
-                    : "Answer Submitted and Evaluated Successfully!",
+                text: scoreText,
             });
+
+            toast.success(scoreText, { id: toastId });
         } catch (err) {
             console.error("Answer submission error:", err);
+            const errText = err.response?.data?.message || "Failed to submit answer. Please try again.";
             setStatusMessage({
                 type: "danger",
-                text: err.response?.data?.message || "Failed to submit answer. Please try again.",
+                text: errText,
             });
+            toast.error(errText, { id: toastId });
         } finally {
             setIsEvaluating(false);
         }
@@ -236,6 +251,7 @@ function Interview() {
             }
         }
 
+        toast.success("Interview completed! Generating your score breakdown...");
         navigate(`/interview/${interviewId}/result`);
     };
 
@@ -303,11 +319,11 @@ function Interview() {
             >
                 <div className="d-flex justify-content-between align-items-start gap-3">
                     <h4 className="fw-bold mb-3" style={{ color: "#1E293B", lineHeight: "1.4" }}>
-                        {current.question}
+                        {current?.question}
                     </h4>
                     <button
                         className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
-                        onClick={() => speakQuestion(current.question)}
+                        onClick={() => speakQuestion(current?.question)}
                         title="Replay Audio"
                     >
                         <i className="bi bi-volume-up-fill"></i> Replay Audio
@@ -316,10 +332,10 @@ function Interview() {
 
                 <div className="d-flex gap-2 flex-wrap mt-2">
                     <span className="badge bg-light text-dark border px-3 py-2">
-                        <strong>Type:</strong> {current.questionType || "General"}
+                        <strong>Type:</strong> {current?.questionType || "General"}
                     </span>
                     <span className="badge bg-light text-dark border px-3 py-2">
-                        <strong>Topic:</strong> {current.topic || "Core"}
+                        <strong>Topic:</strong> {current?.topic || "Core"}
                     </span>
                 </div>
             </div>

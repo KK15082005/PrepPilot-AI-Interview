@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiEye, FiPlay, FiTrash2, FiPlus } from "react-icons/fi";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import API from "../services/api";
 
 function RecentInterviews({ searchQuery = "", onDataChanged }) {
@@ -36,12 +37,13 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
         try {
             await API.delete(`/interview/${id}`);
             setInterviews((prev) => prev.filter((item) => item._id !== id));
+            toast.success("Interview deleted successfully.");
             if (onDataChanged) {
                 onDataChanged();
             }
         } catch (err) {
             console.error("Failed to delete interview:", err);
-            alert(err.response?.data?.message || "Failed to delete interview");
+            toast.error(err.response?.data?.message || "Failed to delete interview.");
         } finally {
             setDeletingId(null);
         }

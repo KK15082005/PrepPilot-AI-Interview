@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import axios from "axios";
+import toast from 'react-hot-toast';
+import API from '../services/api';
 
 function SignUp() {
     const navigate = useNavigate();
@@ -27,12 +28,16 @@ function SignUp() {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            setErrorMsg("Passwords do not match");
+            const msg = "Passwords do not match";
+            setErrorMsg(msg);
+            toast.error(msg);
             return;
         }
 
         if (formData.password.length < 6) {
-            setErrorMsg("Password must be at least 6 characters long");
+            const msg = "Password must be at least 6 characters long";
+            setErrorMsg(msg);
+            toast.error(msg);
             return;
         }
 
@@ -40,20 +45,20 @@ function SignUp() {
         setErrorMsg("");
 
         try {
-            await axios.post(
-                "http://localhost:3000/api/auth/register",
-                {
-                    username: formData.username,
-                    email: formData.email,
-                    password: formData.password,
-                }
-            );
+            await API.post("/auth/register", {
+                username: formData.username,
+                email: formData.email,
+                password: formData.password,
+            });
 
+            toast.success("Account created successfully! Please sign in.");
             navigate("/login");
 
         } catch (error) {
-            console.error(error.response?.data || error.message);
-            setErrorMsg(error.response?.data?.message || "Registration Failed. Please try again.");
+            console.error("Registration error:", error.response?.data || error.message);
+            const msg = error.response?.data?.message || "Registration failed. Please try again.";
+            setErrorMsg(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
