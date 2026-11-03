@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import AudioWaveform from "../components/AudioWaveform";
 import { getQuestions } from "../services/QuestionServices";
 import API from "../services/api";
 
@@ -11,6 +12,8 @@ function Interview() {
     const [questions, setQuestions] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [interviewData, setInterviewData] = useState(null);
+    const [timeLeft, setTimeLeft] = useState(null);
     const [answer, setAnswer] = useState("");
     const [answersMap, setAnswersMap] = useState({});
     const [submittedMap, setSubmittedMap] = useState({});
@@ -20,22 +23,83 @@ function Interview() {
 
     const recognitionRef = useRef(null);
 
-    // Fetch questions on mount
+    // Fetch questions & interview details on mount
     useEffect(() => {
-        async function fetchQuestions() {
+        let isMounted = true;
+
+        async function initInterview() {
             try {
-                const data = await getQuestions(interviewId);
-                setQuestions(data || []);
+                // 1. Fetch questions
+                const questionsData = await getQuestions(interviewId);
+                if (isMounted) {
+                    setQuestions(questionsData || []);
+                }
+
+                // 2. Fetch interview metadata (duration, role, etc.)
+                const interviewRes = await API.get(`/interview/${interviewId}`);
+                const interviewObj = interviewRes.data?.interview;
+
+                if (isMounted) {
+                    setInterviewData(interviewObj);
+
+                    // 3. Initialize countdown timer based on duration
+                    const durationMins = Number(interviewObj?.duration) || 15;
+                    const sessionKey = `preppilot_timer_${interviewId}`;
+                    let targetEndTime = sessionStorage.getItem(sessionKey);
+
+                    if (!targetEndTime) {
+                        targetEndTime = Date.now() + durationMins * 60 * 1000;
+                        sessionStorage.setItem(sessionKey, targetEndTime.toString());
+                    } else {
+                        targetEndTime = Number(targetEndTime);
+                    }
+
+                    const initialRemaining = Math.max(0, Math.floor((targetEndTime - Date.now()) / 1000));
+                    setTimeLeft(initialRemaining);
+                }
             } catch (err) {
-                console.error("Failed to fetch questions:", err);
-                toast.error("Failed to load interview questions. Please refresh.");
+                console.error("Failed to load interview session:", err);
+                if (isMounted) {
+                    toast.error("Failed to load interview questions. Please refresh.");
+                }
             } finally {
-                setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         }
 
-        fetchQuestions();
+        initInterview();
+
+        return () => {
+            isMounted = false;
+        };
     }, [interviewId]);
+
+    // Active Countdown Timer Loop
+    useEffect(() => {
+        if (timeLeft === null) return;
+        if (timeLeft <= 0) return;
+
+        const timerId = setInterval(() => {
+            const sessionKey = `preppilot_timer_${interviewId}`;
+            const targetEndTime = Number(sessionStorage.getItem(sessionKey));
+            if (!targetEndTime) return;
+
+            const remaining = Math.max(0, Math.floor((targetEndTime - Date.now()) / 1000));
+            setTimeLeft(remaining);
+
+            if (remaining === 0) {
+                toast("⏰ Time is up for this mock interview session! You may finish and review results.", {
+                    id: "timer-expired-toast",
+                    duration: 6000,
+                });
+                clearInterval(timerId);
+            }
+        }, 1000);
+
+        return () => clearInterval(timerId);
+    }, [timeLeft, interviewId]);
 
     // Read question aloud whenever current question changes
     useEffect(() => {
@@ -251,8 +315,42 @@ function Interview() {
             }
         }
 
+        // Clear stored session timer
+        sessionStorage.removeItem(`preppilot_timer_${interviewId}`);
+
         toast.success("Interview completed! Generating your score breakdown...");
         navigate(`/interview/${interviewId}/result`);
+    };
+
+    const formatTime = (seconds) => {
+        if (seconds === null || seconds === undefined) return "--:--";
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    };
+
+    const getTimerStyle = (seconds) => {
+        if (seconds === null) {
+            return { background: "#F1F5F9", color: "#64748B", border: "1px solid #E2E8F0" };
+        }
+        if (seconds === 0) {
+            return { background: "#FEF2F2", color: "#991B1B", border: "1px solid #F87171" };
+        }
+        if (seconds <= 60) {
+            return { background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5" };
+        }
+        if (seconds <= 180) {
+            return { background: "#FEF3C7", color: "#B45309", border: "1px solid #FCD34D" };
+        }
+        return { background: "#E6F8F7", color: "#0F766E", border: "1px solid #99F6E4" };
+    };
+
+    const getTimerIcon = (seconds) => {
+        if (seconds === null) return "bi-clock";
+        if (seconds === 0) return "bi-alarm-fill";
+        if (seconds <= 60) return "bi-alarm-fill";
+        if (seconds <= 180) return "bi-hourglass-split";
+        return "bi-stopwatch";
     };
 
     if (loading) {
@@ -285,19 +383,38 @@ function Interview() {
             <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                 <div>
                     <h3 className="fw-bold mb-1" style={{ color: "#183B56" }}>
-                        🎤 AI Mock Interview
+                        🎤 {interviewData?.role ? `${interviewData.role} Mock Interview` : "AI Mock Interview"}
                     </h3>
-                    <span className="text-secondary">
+                    <span className="text-secondary" style={{ fontSize: "14px" }}>
                         Question {currentQuestion + 1} of {questions.length} • {answeredCount} answered
+                        {interviewData?.difficulty && ` • ${interviewData.difficulty} Level`}
                     </span>
                 </div>
 
-                <div className="d-flex align-items-center gap-2">
+                <div className="d-flex align-items-center gap-2 flex-wrap">
+                    {/* Live Countdown Timer Badge */}
+                    <div
+                        className={`d-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-semibold shadow-sm ${
+                            timeLeft <= 60 && timeLeft > 0 ? "timer-urgent" : ""
+                        }`}
+                        style={getTimerStyle(timeLeft)}
+                        title="Time remaining for this interview"
+                    >
+                        <i className={`bi ${getTimerIcon(timeLeft)}`}></i>
+                        <span className="font-monospace fw-bold" style={{ fontSize: "14px", letterSpacing: "0.5px" }}>
+                            {formatTime(timeLeft)}
+                        </span>
+                        <small className="d-none d-sm-inline" style={{ fontSize: "11px", opacity: 0.85 }}>
+                            {timeLeft === 0 ? "Session Expired" : "Remaining"}
+                        </small>
+                    </div>
+
                     {isCurrentSubmitted && (
                         <span className="badge bg-success-subtle text-success border border-success px-3 py-2 rounded-pill">
                             ✓ Answer Evaluated
                         </span>
                     )}
+
                     <button
                         className="btn btn-sm btn-outline-danger px-3 py-2 rounded-pill fw-semibold"
                         onClick={handleFinishInterview}
@@ -307,6 +424,16 @@ function Interview() {
                     </button>
                 </div>
             </div>
+
+            {/* Expired Session Notice */}
+            {timeLeft === 0 && (
+                <div className="alert alert-warning py-2 px-3 mb-3 d-flex align-items-center gap-2 rounded-3 shadow-sm" style={{ fontSize: "14px" }}>
+                    <i className="bi bi-clock-history flex-shrink-0" style={{ fontSize: "18px" }}></i>
+                    <div className="flex-grow-1">
+                        <strong>Time's up!</strong> The allotted {interviewData?.duration || 15} minutes have concluded. Take your time to finish submitting your answer, then click <strong>Finish & View Results</strong> to review your full AI evaluation.
+                    </div>
+                </div>
+            )}
 
             {/* Question Card */}
             <div
@@ -337,6 +464,11 @@ function Interview() {
                     <span className="badge bg-light text-dark border px-3 py-2">
                         <strong>Topic:</strong> {current?.topic || "Core"}
                     </span>
+                    {interviewData?.duration && (
+                        <span className="badge bg-light text-dark border px-3 py-2">
+                            <strong>Session:</strong> {interviewData.duration} Mins
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -349,7 +481,9 @@ function Interview() {
                     <div className="d-flex align-items-center gap-2">
                         <button
                             type="button"
-                            className={`btn btn-sm ${isListening ? "btn-danger" : "btn-outline-primary"} px-3 py-2 rounded-pill d-flex align-items-center gap-2`}
+                            className={`btn btn-sm ${
+                                isListening ? "btn-danger mic-recording-active" : "btn-outline-primary"
+                            } px-3 py-2 rounded-pill d-flex align-items-center gap-2`}
                             onClick={toggleListening}
                             disabled={isEvaluating}
                         >
@@ -363,6 +497,9 @@ function Interview() {
                         )}
                     </div>
                 </div>
+
+                {/* Live Audio Waveform Monitor */}
+                <AudioWaveform isListening={isListening} />
 
                 <textarea
                     className="form-control"
