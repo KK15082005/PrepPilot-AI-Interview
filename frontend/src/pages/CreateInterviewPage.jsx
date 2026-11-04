@@ -98,8 +98,11 @@ function CreateInterview() {
       }}
     >
       <div className="container" style={{ maxWidth: "840px" }}>
-        {/* Back Link */}
-        <div className="mb-3">
+        {/* Top Header with Brand Logo & Back Link */}
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <Link to="/" className="text-decoration-none d-flex align-items-center">
+            <img src="/logo.png" alt="PrepPilot AI" style={{ height: "38px", objectFit: "contain" }} />
+          </Link>
           <Link
             to="/dashboard"
             className="text-decoration-none d-inline-flex align-items-center gap-2 text-secondary fw-semibold"

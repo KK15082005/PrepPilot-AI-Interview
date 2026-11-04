@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
     FiArrowLeft,
-    FiPrinter,
+    FiDownload,
     FiCheckCircle,
     FiAlertCircle,
     FiAward,
@@ -69,9 +69,19 @@ function ResultPage() {
         }));
     };
 
-    const handlePrint = () => {
-        toast("Opening print dialog...", { icon: "🖨️", duration: 2500 });
-        window.print();
+    const handleSavePdf = () => {
+        // Expand all questions so the full evaluation appears in the PDF
+        const allOpen = {};
+        if (breakdown && breakdown.length) {
+            breakdown.forEach((_, idx) => {
+                allOpen[idx] = true;
+            });
+            setOpenQuestions(allOpen);
+        }
+        toast.success("Preparing report... Save as PDF", { icon: "📄", duration: 2500 });
+        setTimeout(() => {
+            window.print();
+        }, 350);
     };
 
     const handleCopySummary = () => {
@@ -154,20 +164,57 @@ function ResultPage() {
         <div style={{ background: "#FCFEFE", minHeight: "100vh", padding: "clamp(20px, 3.5vw, 40px) 16px 80px" }}>
             <style>{`
                 @media print {
-                    .no-print { display: none !important; }
-                    body { background: #FFFFFF !important; }
-                    .card { box-shadow: none !important; border: 1px solid #E2E8F0 !important; }
+                    @page {
+                        margin: 12mm 15mm;
+                        size: A4 portrait;
+                    }
+                    html, body, #root {
+                        overflow: visible !important;
+                        overflow-x: visible !important;
+                        height: auto !important;
+                        min-height: auto !important;
+                        display: block !important;
+                        background: #FFFFFF !important;
+                        color: #0F172A !important;
+                    }
+                    .no-print {
+                        display: none !important;
+                    }
+                    * {
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                    }
+                    .card {
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
+                        box-shadow: none !important;
+                        border: 1px solid #CBD5E1 !important;
+                        margin-bottom: 16px !important;
+                    }
+                    .print-show-always {
+                        display: block !important;
+                    }
                 }
             `}</style>
             <div className="container" style={{ maxWidth: "940px", padding: 0 }}>
+                {/* Print Header */}
+                <div className="d-none d-print-block mb-4 pb-2 border-bottom">
+                    <img src="/logo.png" alt="PrepPilot AI" style={{ height: "40px", objectFit: "contain" }} />
+                </div>
+
                 {/* Top Navigation */}
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 no-print">
-                    <button
-                        className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
-                        onClick={() => navigate("/dashboard")}
-                    >
-                        <FiArrowLeft /> Back to Dashboard
-                    </button>
+                    <div className="d-flex align-items-center gap-3">
+                        <Link to="/" className="text-decoration-none d-flex align-items-center">
+                            <img src="/logo.png" alt="PrepPilot AI" style={{ height: "36px", objectFit: "contain" }} />
+                        </Link>
+                        <button
+                            className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
+                            onClick={() => navigate("/dashboard")}
+                        >
+                            <FiArrowLeft /> Back to Dashboard
+                        </button>
+                    </div>
 
                     <div className="d-flex gap-2 flex-wrap">
                         <button
@@ -178,9 +225,9 @@ function ResultPage() {
                         </button>
                         <button
                             className="btn btn-sm btn-light border d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
-                            onClick={handlePrint}
+                            onClick={handleSavePdf}
                         >
-                            <FiPrinter /> Print / Save PDF
+                            <FiDownload /> Save as PDF
                         </button>
                         <Link to="/createinterview" className="text-decoration-none">
                             <button
@@ -308,15 +355,22 @@ function ResultPage() {
                             </div>
 
                             {result?.strengths && result.strengths.length > 0 ? (
-                                <div className="d-flex flex-wrap gap-2">
+                                <div className="d-flex flex-column gap-2">
                                     {result.strengths.map((s, idx) => (
-                                        <span
+                                        <div
                                             key={idx}
-                                            className="badge bg-white text-success border border-success-subtle px-3 py-2 rounded-pill fw-medium"
-                                            style={{ fontSize: "13px" }}
+                                            className="p-2.5 px-3 rounded-3 bg-white border border-success-subtle d-flex align-items-start gap-2 shadow-sm"
+                                            style={{
+                                                fontSize: "13.5px",
+                                                lineHeight: "1.5",
+                                                color: "#065F46",
+                                                whiteSpace: "normal",
+                                                wordBreak: "break-word"
+                                            }}
                                         >
-                                            ✓ {s}
-                                        </span>
+                                            <span className="text-success flex-shrink-0 fw-bold" style={{ fontSize: "14px", marginTop: "1px" }}>✓</span>
+                                            <span className="flex-grow-1">{s}</span>
+                                        </div>
                                     ))}
                                 </div>
                             ) : (
@@ -343,15 +397,22 @@ function ResultPage() {
                             </div>
 
                             {result?.weakness && result.weakness.length > 0 ? (
-                                <div className="d-flex flex-wrap gap-2">
+                                <div className="d-flex flex-column gap-2">
                                     {result.weakness.map((w, idx) => (
-                                        <span
+                                        <div
                                             key={idx}
-                                            className="badge bg-white text-dark border border-warning-subtle px-3 py-2 rounded-pill fw-medium"
-                                            style={{ fontSize: "13px" }}
+                                            className="p-2.5 px-3 rounded-3 bg-white border border-warning-subtle d-flex align-items-start gap-2 shadow-sm"
+                                            style={{
+                                                fontSize: "13.5px",
+                                                lineHeight: "1.5",
+                                                color: "#78350F",
+                                                whiteSpace: "normal",
+                                                wordBreak: "break-word"
+                                            }}
                                         >
-                                            🎯 {w}
-                                        </span>
+                                            <span className="flex-shrink-0" style={{ fontSize: "14px", marginTop: "1px" }}>🎯</span>
+                                            <span className="flex-grow-1">{w}</span>
+                                        </div>
                                     ))}
                                 </div>
                             ) : (
@@ -420,9 +481,8 @@ function ResultPage() {
                                 </div>
 
                                 {/* Accordion Content */}
-                                {isOpen && (
-                                    <div className="card-body p-4 pt-3 border-top">
-                                        {/* Candidate's Answer */}
+                                <div className={`card-body p-4 pt-3 border-top ${isOpen ? "" : "d-none print-show-always"}`}>
+                                    {/* Candidate's Answer */}
                                         <div className="mb-3">
                                             <strong className="d-block text-secondary mb-1" style={{ fontSize: "13px" }}>
                                                 YOUR ANSWER:
@@ -511,7 +571,6 @@ function ResultPage() {
                                             </div>
                                         )}
                                     </div>
-                                )}
                             </div>
                         );
                     })}

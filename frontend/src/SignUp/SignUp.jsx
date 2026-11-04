@@ -104,26 +104,12 @@ function SignUp() {
                             }}
                         >
                             <div className="mb-4 text-center text-sm-start">
-                                <Link to="/" className="text-decoration-none d-inline-flex align-items-center gap-2 mb-2">
-                                    <span
-                                        style={{
-                                            width: "32px",
-                                            height: "32px",
-                                            background: "linear-gradient(135deg, #0F9D9A 0%, #3CC8C3 100%)",
-                                            borderRadius: "8px",
-                                            display: "inline-flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            color: "#fff",
-                                            fontSize: "16px",
-                                            boxShadow: "0 2px 8px rgba(15, 157, 154, 0.25)"
-                                        }}
-                                    >
-                                        ⚡
-                                    </span>
-                                    <h4 className="fw-bold mb-0" style={{ color: "#0F172A", fontSize: "1.25rem" }}>
-                                        PrepPilot <span style={{ color: "#0F9D9A" }}>AI</span>
-                                    </h4>
+                                <Link to="/" className="text-decoration-none d-inline-flex align-items-center mb-2">
+                                    <img
+                                        src="/logo.png"
+                                        alt="PrepPilot AI"
+                                        style={{ height: "46px", width: "auto", maxWidth: "220px", objectFit: "contain" }}
+                                    />
                                 </Link>
                                 <h3 className="fw-bold mt-2 mb-1" style={{ color: "#0F172A", fontSize: "22px" }}>
                                     Create Your Account

@@ -10,25 +10,12 @@ function Footer() {
                 <div className="row g-4 justify-content-between">   
                     {/* Brand Column */}  
                     <div className="col-lg-4 col-md-6 mb-3 mb-md-0">
-                        <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none mb-3">
-                            <span
-                                style={{
-                                    width: "32px",
-                                    height: "32px",
-                                    background: "linear-gradient(135deg, #0F9D9A, #3CC8C3)",
-                                    borderRadius: "8px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontSize: "16px",
-                                }}
-                            >
-                                ⚡
-                            </span>
-                            <h4 className="mb-0 fw-bold" style={{ color: "#0F172A", fontSize: "1.25rem" }}>
-                                PrepPilot <span style={{ color: "#0F9D9A" }}>AI</span>
-                            </h4>
+                        <Link to="/" className="d-flex align-items-center text-decoration-none mb-3">
+                            <img
+                                src="/logo.png"
+                                alt="PrepPilot AI"
+                                style={{ height: "42px", width: "auto", maxWidth: "200px", objectFit: "contain" }}
+                            />
                         </Link>
 
                         <p className="text-secondary" style={{ fontSize: "14px", lineHeight: "1.6", maxWidth: "340px" }}>

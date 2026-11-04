@@ -39,30 +39,16 @@ function Navbar() {
       <div className="container">
         {/* Brand Logo */}
         <Link
-          className="navbar-brand fw-bold d-flex align-items-center gap-2"
+          className="navbar-brand d-flex align-items-center"
           to="/"
-          style={{ color: "#0F172A", fontSize: "1.35rem", textDecoration: "none" }}
+          style={{ textDecoration: "none" }}
           onClick={() => setMobileMenuOpen(false)}
         >
-          <span
-            style={{
-              width: "34px",
-              height: "34px",
-              background: "linear-gradient(135deg, #0F9D9A 0%, #3CC8C3 100%)",
-              borderRadius: "9px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fff",
-              fontSize: "17px",
-              boxShadow: "0 2px 8px rgba(15, 157, 154, 0.25)",
-            }}
-          >
-            ⚡
-          </span>
-          <span>
-            PrepPilot <span style={{ color: "#0F9D9A" }}>AI</span>
-          </span>
+          <img
+            src="/logo.png"
+            alt="PrepPilot AI"
+            style={{ height: "42px", width: "auto", objectFit: "contain" }}
+          />
         </Link>
 
         {/* Mobile Hamburger Toggle (React controlled) */}
