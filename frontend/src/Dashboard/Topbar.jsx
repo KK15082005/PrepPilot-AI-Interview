@@ -1,17 +1,49 @@
-import React from "react";
-import { FiBell, FiSearch, FiMenu, FiPlus, FiX } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { FiBell, FiSearch, FiMenu, FiPlus, FiX, FiUser, FiLogOut, FiCheckCircle, FiChevronDown } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import API from "../services/api";
 
 function Topbar({ searchQuery = "", onSearchChange, onToggleSidebar }) {
+    const navigate = useNavigate();
+    const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const initial = user?.username ? user.username.charAt(0).toUpperCase() : "U";
     const displayName = user?.username || "Candidate";
+    const userEmail = user?.email || "candidate@preppilot.ai";
 
     const todayDate = new Date().toLocaleDateString("en-US", {
         weekday: "short",
         month: "short",
         day: "numeric"
     });
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setProfileDropdownOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await API.post("/auth/logout");
+        } catch (err) {
+            console.error("Logout request failed:", err);
+        } finally {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            setProfileDropdownOpen(false);
+            toast.success("Signed out successfully.");
+            navigate("/login");
+        }
+    };
 
     return (
         <header
@@ -128,32 +160,122 @@ function Topbar({ searchQuery = "", onSearchChange, onToggleSidebar }) {
                         <FiBell size={16} />
                     </div>
 
-                    {/* Profile Avatar */}
-                    <div
-                        className="d-flex align-items-center gap-2 p-1 pe-sm-2 rounded-pill border shadow-sm"
-                        style={{ background: "#FFFFFF", borderColor: "#E2E8F0" }}
-                        title={user?.email || "Candidate Profile"}
-                    >
-                        <div
+                    {/* Profile Dropdown Container */}
+                    <div className="position-relative" ref={dropdownRef}>
+                        <button
+                            type="button"
+                            className="btn p-1 pe-2 rounded-pill border shadow-sm d-flex align-items-center gap-2 bg-white"
+                            onClick={() => setProfileDropdownOpen((prev) => !prev)}
                             style={{
-                                width: "32px",
-                                height: "32px",
-                                borderRadius: "50%",
-                                background: "linear-gradient(135deg, #0F9D9A, #27B3AE)",
-                                color: "white",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                fontWeight: "700",
-                                fontSize: "13px",
-                                boxShadow: "0 2px 6px rgba(15, 157, 154, 0.3)"
+                                borderColor: "#E2E8F0",
+                                transition: "all 0.15s ease",
+                                outline: "none",
                             }}
+                            aria-expanded={profileDropdownOpen}
+                            aria-label="User account menu"
                         >
-                            {initial}
-                        </div>
-                        <span className="fw-semibold text-dark d-none d-lg-inline me-1" style={{ fontSize: "13px" }}>
-                            {displayName}
-                        </span>
+                            <div
+                                style={{
+                                    width: "32px",
+                                    height: "32px",
+                                    borderRadius: "50%",
+                                    background: "linear-gradient(135deg, #0F9D9A, #27B3AE)",
+                                    color: "white",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    fontWeight: "700",
+                                    fontSize: "13px",
+                                    boxShadow: "0 2px 6px rgba(15, 157, 154, 0.3)"
+                                }}
+                            >
+                                {initial}
+                            </div>
+                            <span className="fw-semibold text-dark d-none d-sm-inline me-1" style={{ fontSize: "13px" }}>
+                                {displayName}
+                            </span>
+                            <FiChevronDown size={14} className="text-secondary" />
+                        </button>
+
+                        {/* Dropdown Menu Modal/Card */}
+                        {profileDropdownOpen && (
+                            <div
+                                className="position-absolute end-0 mt-2 py-2 shadow-lg border rounded-4 bg-white"
+                                style={{
+                                    width: "260px",
+                                    zIndex: 1100,
+                                    borderColor: "#E2E8F0",
+                                    animation: "fadeIn 0.15s ease",
+                                }}
+                            >
+                                {/* User Info Header */}
+                                <div className="px-3 py-2 border-bottom">
+                                    <div className="d-flex align-items-center gap-2 mb-1">
+                                        <div
+                                            style={{
+                                                width: "36px",
+                                                height: "36px",
+                                                borderRadius: "50%",
+                                                background: "linear-gradient(135deg, #0F9D9A, #27B3AE)",
+                                                color: "white",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                fontWeight: "700",
+                                                fontSize: "14px",
+                                            }}
+                                        >
+                                            {initial}
+                                        </div>
+                                        <div style={{ minWidth: 0 }}>
+                                            <p className="mb-0 fw-bold text-dark text-truncate" style={{ fontSize: "14px" }}>
+                                                {displayName}
+                                            </p>
+                                            <small className="text-muted text-truncate d-block" style={{ fontSize: "11px" }}>
+                                                {userEmail}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <span
+                                        className="badge mt-1 px-2 py-0.5 rounded-pill"
+                                        style={{ background: "#E6F8F7", color: "#0F9D9A", fontSize: "10px", fontWeight: "600" }}
+                                    >
+                                        ● Candidate Account
+                                    </span>
+                                </div>
+
+                                {/* Menu Items */}
+                                <div className="py-1">
+                                    <Link
+                                        to="/dashboard"
+                                        className="dropdown-item px-3 py-2 d-flex align-items-center gap-2 text-dark"
+                                        style={{ fontSize: "13px", textDecoration: "none" }}
+                                        onClick={() => setProfileDropdownOpen(false)}
+                                    >
+                                        <FiUser size={15} className="text-secondary" /> Candidate Overview
+                                    </Link>
+                                    <Link
+                                        to="/createinterview"
+                                        className="dropdown-item px-3 py-2 d-flex align-items-center gap-2 text-dark"
+                                        style={{ fontSize: "13px", textDecoration: "none" }}
+                                        onClick={() => setProfileDropdownOpen(false)}
+                                    >
+                                        <FiPlus size={15} className="text-secondary" /> New Mock Session
+                                    </Link>
+                                </div>
+
+                                <div className="border-top pt-1 mt-1">
+                                    <button
+                                        type="button"
+                                        onClick={handleLogout}
+                                        className="dropdown-item px-3 py-2 d-flex align-items-center gap-2 text-danger w-100 border-0 bg-transparent"
+                                        style={{ fontSize: "13px" }}
+                                    >
+                                        <FiLogOut size={15} /> Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

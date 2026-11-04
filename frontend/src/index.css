@@ -81,14 +81,90 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
 }
 
-a {
-  color: var(--primary);
-  text-decoration: none;
-  transition: color 0.2s ease;
+/* Global Link & Button Text-Decoration Reset */
+a, a:link, a:visited, a:hover, a:focus, a:active,
+a *, .btn, .btn:hover, .btn:focus, .btn:active, .btn *,
+button, button:hover, button:focus, button * {
+  text-decoration: none !important;
 }
 
-a:hover {
-  color: var(--primary-hover);
+/* ==========================================================================
+   Button Color & Interactive Hover System
+   ========================================================================== */
+.btn-hero-primary {
+  background: linear-gradient(135deg, #0F9D9A 0%, #27B3AE 50%, #3CC8C3 100%) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(15, 157, 154, 0.28) !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+}
+
+.btn-hero-primary:hover, .btn-hero-primary:focus {
+  background: linear-gradient(135deg, #0B7E7C 0%, #0F9D9A 50%, #20B2AA 100%) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(15, 157, 154, 0.45) !important;
+  text-decoration: none !important;
+}
+
+.btn-hero-secondary {
+  background: #FFFFFF !important;
+  color: #1E293B !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-radius: 12px !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+}
+
+.btn-hero-secondary:hover, .btn-hero-secondary:focus {
+  background: #F0FDFB !important;
+  color: #0F9D9A !important;
+  border-color: #0F9D9A !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 157, 154, 0.18) !important;
+  text-decoration: none !important;
+}
+
+.btn-nav-login {
+  color: #334155 !important;
+  background: transparent !important;
+  border: 1.5px solid transparent !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+.btn-nav-login:hover, .btn-nav-login:focus {
+  color: #0F9D9A !important;
+  background: #E6F8F7 !important;
+  border-color: #C4F1ED !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(15, 157, 154, 0.15) !important;
+  text-decoration: none !important;
+}
+
+.btn-nav-signup {
+  background: linear-gradient(135deg, #0F9D9A 0%, #3CC8C3 100%) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(15, 157, 154, 0.25) !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+.btn-nav-signup:hover, .btn-nav-signup:focus {
+  background: linear-gradient(135deg, #0B7E7C 0%, #20B2AA 100%) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 157, 154, 0.4) !important;
+  text-decoration: none !important;
 }
 
 /* Responsive Mobile Sidebar Offcanvas */
@@ -211,9 +287,27 @@ a:hover {
   animation: timerUrgentPulse 1s ease-in-out infinite;
 }
 
-/* Print utility */
+/* Print Engine Global Fix */
 @media print {
+  @page {
+    margin: 12mm 15mm;
+    size: A4 portrait;
+  }
+  html, body, #root {
+    overflow: visible !important;
+    overflow-x: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    display: block !important;
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+  }
   .no-print {
     display: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaUser, FaLock } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
+import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import toast from 'react-hot-toast';
 import API from '../services/api';
 
@@ -13,6 +12,8 @@ function SignUp() {
         password: "",
         confirmPassword: ""
     });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
 
@@ -75,18 +76,18 @@ function SignUp() {
             }}
         >
             <div className="container" style={{ maxWidth: "1080px" }}>
-                <div className='row align-items-center justify-content-center g-5'>
+                <div className='row align-items-center justify-content-center g-4 g-lg-5'>
                     {/* Illustration Column (Hidden on mobile for better UX) */}
                     <div className="col-lg-6 d-none d-lg-block text-center">
                         <img
                             src="/signup-img.png"
                             alt="PrepPilot Registration Illustration"
-                            style={{ maxWidth: "90%", height: "auto", filter: "drop-shadow(0 15px 30px rgba(15, 157, 154, 0.12))" }}
+                            style={{ maxWidth: "85%", height: "auto", filter: "drop-shadow(0 15px 30px rgba(15, 157, 154, 0.12))" }}
                         />
                         <div className="mt-4 text-center">
-                            <h4 className="fw-bold" style={{ color: "#0F172A" }}>Practice Without Pressure</h4>
-                            <p className="text-secondary" style={{ maxWidth: "380px", margin: "0 auto" }}>
-                                Personalized questions, instant speech analysis, and model answers to help you interview with confidence.
+                            <h4 className="fw-bold" style={{ color: "#0F172A", fontSize: "1.25rem" }}>Practice Without Pressure</h4>
+                            <p className="text-secondary" style={{ maxWidth: "380px", margin: "0 auto", fontSize: "14px", lineHeight: "1.6" }}>
+                                Personalized questions, real-time speech analysis, and AI model answers to help you interview with confidence.
                             </p>
                         </div>
                     </div>
@@ -98,112 +99,153 @@ function SignUp() {
                             style={{
                                 borderRadius: "24px",
                                 border: "1px solid #E2E8F0",
-                                maxWidth: "520px",
+                                maxWidth: "500px",
                                 margin: "0 auto"
                             }}
                         >
                             <div className="mb-4 text-center text-sm-start">
-                                <Link to="/" className="text-decoration-none">
-                                    <h4 className="fw-bold mb-1" style={{ color: "#0F172A" }}>
-                                        PrepPilot <span style={{ color: "#0F9D9A" }}>AI</span>
-                                    </h4>
+                                <Link to="/" className="text-decoration-none d-inline-flex align-items-center mb-2">
+                                    <img
+                                        src="/logo.png"
+                                        alt="PrepPilot AI"
+                                        style={{ height: "46px", width: "auto", maxWidth: "220px", objectFit: "contain" }}
+                                    />
                                 </Link>
                                 <h3 className="fw-bold mt-2 mb-1" style={{ color: "#0F172A", fontSize: "22px" }}>
                                     Create Your Account
                                 </h3>
-                                <small className='text-secondary'>
-                                    Join thousands of learners and get interview ready today.
+                                <small className='text-secondary' style={{ fontSize: "13px" }}>
+                                    Start practicing technical & behavioral mock sessions today.
                                 </small>
                             </div>
 
                             {errorMsg && (
-                                <div className="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center gap-2" style={{ fontSize: "14px" }}>
-                                    <i className="bi bi-exclamation-circle-fill flex-shrink-0"></i>
+                                <div className="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center gap-2 rounded-3" style={{ fontSize: "13px" }}>
+                                    <i className="bi bi-exclamation-circle-fill flex-shrink-0 text-danger"></i>
                                     <span>{errorMsg}</span>
                                 </div>
                             )}
 
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit} noValidate>
                                 <div className="mb-3">
-                                    <label htmlFor="inputUsername" className="form-label fw-semibold" style={{ fontSize: "14px" }}>
-                                        Full Name / Username
+                                    <label htmlFor="signup-username" className="form-label fw-semibold" style={{ fontSize: "13px", color: "#334155" }}>
+                                        Full Name or Username
                                     </label>
                                     <div className='input-group'>
-                                        <span className='input-group-text bg-light text-secondary border-end-0'><FaUser /></span>
+                                        <span className='input-group-text bg-white text-muted border-end-0 ps-3 pe-2'>
+                                            <FiUser size={16} />
+                                        </span>
                                         <input
                                             type="text"
                                             name="username"
                                             value={formData.username}
                                             onChange={handleChange}
-                                            className="form-control py-2 ps-2 border-start-0"
-                                            id="inputUsername"
+                                            className="form-control py-2.5 ps-1 border-start-0 shadow-none"
+                                            id="signup-username"
                                             placeholder="e.g. Alex Morgan"
                                             required
+                                            autoComplete="name"
+                                            style={{ fontSize: "14px", borderColor: "#CBD5E1" }}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="mb-3">
-                                    <label htmlFor="inputEmail" className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                                    <label htmlFor="signup-email" className="form-label fw-semibold" style={{ fontSize: "13px", color: "#334155" }}>
                                         Email Address
                                     </label>
                                     <div className='input-group'>
-                                        <span className='input-group-text bg-light text-secondary border-end-0'><MdEmail /></span>
+                                        <span className='input-group-text bg-white text-muted border-end-0 ps-3 pe-2'>
+                                            <FiMail size={16} />
+                                        </span>
                                         <input
                                             type="email"
                                             name="email"
                                             value={formData.email}
                                             onChange={handleChange}
-                                            className="form-control py-2 ps-2 border-start-0"
-                                            id="inputEmail"
+                                            className="form-control py-2.5 ps-1 border-start-0 shadow-none"
+                                            id="signup-email"
                                             placeholder="alex@example.com"
                                             required
+                                            autoComplete="email"
+                                            style={{ fontSize: "14px", borderColor: "#CBD5E1" }}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="mb-3">
-                                    <label htmlFor="inputPassword" className="form-label fw-semibold" style={{ fontSize: "14px" }}>
-                                        Password
+                                    <label htmlFor="signup-password" className="form-label fw-semibold" style={{ fontSize: "13px", color: "#334155" }}>
+                                        Password (Min. 6 characters)
                                     </label>
                                     <div className='input-group'>
-                                        <span className='input-group-text bg-light text-secondary border-end-0'><FaLock /></span>
+                                        <span className='input-group-text bg-white text-muted border-end-0 ps-3 pe-2'>
+                                            <FiLock size={16} />
+                                        </span>
                                         <input
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             name="password"
                                             value={formData.password}
                                             onChange={handleChange}
-                                            id="inputPassword"
-                                            className="form-control py-2 ps-2 border-start-0"
+                                            id="signup-password"
+                                            className="form-control py-2.5 ps-1 border-start-0 border-end-0 shadow-none"
                                             placeholder='At least 6 characters'
                                             required
+                                            autoComplete="new-password"
+                                            style={{ fontSize: "14px", borderColor: "#CBD5E1" }}
                                         />
+                                        <button
+                                            type="button"
+                                            className="input-group-text bg-white text-muted border-start-0 pe-3 ps-2"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            aria-label={showPassword ? "Hide password" : "Show password"}
+                                            style={{ cursor: "pointer", borderColor: "#CBD5E1" }}
+                                        >
+                                            {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div className="mb-3">
-                                    <label htmlFor="inputConfirmPassword" className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                                    <label htmlFor="signup-confirmPassword" className="form-label fw-semibold" style={{ fontSize: "13px", color: "#334155" }}>
                                         Confirm Password
                                     </label>
                                     <div className='input-group'>
-                                        <span className='input-group-text bg-light text-secondary border-end-0'><FaLock /></span>
+                                        <span className='input-group-text bg-white text-muted border-end-0 ps-3 pe-2'>
+                                            <FiLock size={16} />
+                                        </span>
                                         <input
-                                            type="password"
+                                            type={showConfirmPassword ? "text" : "password"}
                                             name="confirmPassword"
                                             value={formData.confirmPassword}
                                             onChange={handleChange}
-                                            id="inputConfirmPassword"
-                                            className="form-control py-2 ps-2 border-start-0"
+                                            id="signup-confirmPassword"
+                                            className="form-control py-2.5 ps-1 border-start-0 border-end-0 shadow-none"
                                             placeholder='Repeat your password'
                                             required
+                                            autoComplete="new-password"
+                                            style={{ fontSize: "14px", borderColor: "#CBD5E1" }}
                                         />
+                                        <button
+                                            type="button"
+                                            className="input-group-text bg-white text-muted border-start-0 pe-3 ps-2"
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                                            style={{ cursor: "pointer", borderColor: "#CBD5E1" }}
+                                        >
+                                            {showConfirmPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                                        </button>
                                     </div>
                                 </div>
 
                                 <button
                                     type='submit'
-                                    className="btn w-100 py-3 mt-3 text-white fw-semibold d-flex align-items-center justify-content-center gap-2 shadow-sm"
-                                    style={{ background: "linear-gradient(135deg,#0F9D9A,#3CC8C3)", border: "none", borderRadius: "10px" }}
+                                    className="btn w-100 py-3 mt-3 text-white fw-semibold d-inline-flex align-items-center justify-content-center gap-2 shadow-sm"
+                                    style={{
+                                        background: loading ? "#80CBC4" : "linear-gradient(135deg,#0F9D9A,#3CC8C3)",
+                                        border: "none",
+                                        borderRadius: "12px",
+                                        fontSize: "15px"
+                                    }}
                                     disabled={loading}
                                 >
                                     {loading ? (
@@ -212,13 +254,18 @@ function SignUp() {
                                             Creating Account...
                                         </>
                                     ) : (
-                                        "Create Free Account"
+                                        <>
+                                            <span>Create Free Account</span>
+                                            <FiArrowRight size={16} />
+                                        </>
                                     )}
                                 </button>
 
-                                <div className="text-center mt-3" style={{ fontSize: "14px" }}>
+                                <div className="text-center mt-3" style={{ fontSize: "13px" }}>
                                     <span className='text-secondary'>Already have an account? </span>
-                                    <Link to="/login" style={{ color: "#0F9D9A", fontWeight: "600" }}>Login here</Link>
+                                    <Link to="/login" style={{ color: "#0F9D9A", fontWeight: "600", textDecoration: "none" }}>
+                                        Sign in here
+                                    </Link>
                                 </div>
                             </form>
                         </div>

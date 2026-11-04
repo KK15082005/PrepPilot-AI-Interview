@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import "./Login.css";
-import { MdEmail } from "react-icons/md";
-import { FaLock } from "react-icons/fa";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import API from '../services/api';
@@ -9,6 +8,7 @@ import API from '../services/api';
 function Login() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [formData, setFormData] = useState({
         email: "",
@@ -54,81 +54,117 @@ function Login() {
     return (
         <div className='login'>
             <div className='login-card'>
+                {/* Brand Header */}
                 <div className="text-center mb-4">
-                    <Link to="/" className="text-decoration-none">
-                        <h4 className="fw-bold mb-1" style={{ color: "#0F172A" }}>
-                            PrepPilot <span style={{ color: "#0F9D9A" }}>AI</span>
-                        </h4>
+                    <Link to="/" className="text-decoration-none d-inline-flex align-items-center mb-2">
+                        <img
+                            src="/logo.png"
+                            alt="PrepPilot AI"
+                            style={{ height: "46px", width: "auto", maxWidth: "220px", objectFit: "contain" }}
+                        />
                     </Link>
                     <h3 className='fw-bold mt-2 mb-1' style={{ color: "#0F172A", fontSize: "22px" }}>
                         Welcome Back
                     </h3>
-                    <small className='text-secondary'>
-                        Log in to resume your mock interview preparation
+                    <small className='text-secondary' style={{ fontSize: "13px" }}>
+                        Sign in to resume your mock interview preparation
                     </small>
                 </div>
 
                 {errorMsg && (
-                    <div className="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center gap-2" style={{ fontSize: "14px" }}>
-                        <i className="bi bi-exclamation-circle-fill flex-shrink-0"></i>
+                    <div className="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center gap-2 rounded-3" style={{ fontSize: "13px" }}>
+                        <i className="bi bi-exclamation-circle-fill flex-shrink-0 text-danger"></i>
                         <span>{errorMsg}</span>
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
                     <div className="mb-3">
-                        <label className="form-label fw-semibold" style={{ fontSize: "14px" }}>
+                        <label htmlFor="login-email" className="form-label fw-semibold" style={{ fontSize: "13px", color: "#334155" }}>
                             Email Address
                         </label>
                         <div className='input-group'>
-                            <span className='input-group-text bg-light text-secondary border-end-0'><MdEmail /></span>
+                            <span className='input-group-text bg-white text-muted border-end-0 ps-3 pe-2'>
+                                <FiMail size={16} />
+                            </span>
                             <input
+                                id="login-email"
                                 type="email"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="form-control py-2 ps-2 border-start-0"
+                                className="form-control py-2.5 ps-1 border-start-0 shadow-none"
                                 placeholder="name@example.com"
                                 required
+                                autoComplete="email"
+                                style={{ fontSize: "14px", borderColor: "#CBD5E1" }}
                             />
                         </div>
                     </div>
 
                     <div className='mb-3'>
-                        <label className="form-label fw-semibold" style={{ fontSize: "14px" }}>
-                            Password
-                        </label>
+                        <div className="d-flex justify-content-between align-items-center mb-1">
+                            <label htmlFor="login-password" className="form-label fw-semibold mb-0" style={{ fontSize: "13px", color: "#334155" }}>
+                                Password
+                            </label>
+                        </div>
                         <div className='input-group'>
-                            <span className='input-group-text bg-light text-secondary border-end-0'><FaLock /></span>
+                            <span className='input-group-text bg-white text-muted border-end-0 ps-3 pe-2'>
+                                <FiLock size={16} />
+                            </span>
                             <input
-                                type="password"
+                                id="login-password"
+                                type={showPassword ? "text" : "password"}
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="form-control py-2 ps-2 border-start-0"
+                                className="form-control py-2.5 ps-1 border-start-0 border-end-0 shadow-none"
                                 placeholder='Enter your password'
                                 required
+                                autoComplete="current-password"
+                                style={{ fontSize: "14px", borderColor: "#CBD5E1" }}
                             />
+                            <button
+                                type="button"
+                                className="input-group-text bg-white text-muted border-start-0 pe-3 ps-2"
+                                onClick={() => setShowPassword(!showPassword)}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                style={{ cursor: "pointer", borderColor: "#CBD5E1" }}
+                            >
+                                {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                            </button>
                         </div>
                     </div>
 
                     <button
                         type='submit'
-                        className="btn w-100 py-3 mt-3 text-white fw-semibold d-flex align-items-center justify-content-center shadow-sm"
-                        style={{ background: "linear-gradient(135deg,#0F9D9A,#3CC8C3)", border: "none", borderRadius: "10px" }}
+                        className="btn w-100 py-3 mt-3 text-white fw-semibold d-inline-flex align-items-center justify-content-center gap-2 shadow-sm"
+                        style={{
+                            background: loading ? "#80CBC4" : "linear-gradient(135deg, #0F9D9A, #3CC8C3)",
+                            border: "none",
+                            borderRadius: "12px",
+                            fontSize: "15px"
+                        }}
                         disabled={loading}
                     >
                         {loading ? (
                             <>
-                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                Logging in...
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Signing in...
                             </>
-                        ) : "Sign In to Dashboard"}
+                        ) : (
+                            <>
+                                <span>Sign In to Dashboard</span>
+                                <FiArrowRight size={16} />
+                            </>
+                        )}
                     </button>
 
-                    <div className="text-center mt-4" style={{ fontSize: "14px" }}>
+                    <div className="text-center mt-4" style={{ fontSize: "13px" }}>
                         <span className='text-secondary'>Don't have an account? </span>
-                        <Link to="/signup" style={{ color: "#0F9D9A", fontWeight: "600" }}>Create one for free</Link>
+                        <Link to="/signup" style={{ color: "#0F9D9A", fontWeight: "600", textDecoration: "none" }}>
+                            Create one for free
+                        </Link>
                     </div>
                 </form>
             </div>

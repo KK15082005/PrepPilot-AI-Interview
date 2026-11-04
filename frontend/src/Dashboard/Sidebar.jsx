@@ -70,26 +70,12 @@ function Sidebar({ isOpen = false, onClose }) {
                 <div>
                     {/* Header Logo + Mobile Close */}
                     <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-                        <Link to="/" className="text-decoration-none" onClick={handleNavClick}>
-                            <h4 className="mb-0 fw-bold d-flex align-items-center gap-2" style={{ color: "#0F172A", fontSize: "1.25rem" }}>
-                                <span
-                                    style={{
-                                        width: "34px",
-                                        height: "34px",
-                                        background: "linear-gradient(135deg, #0F9D9A 0%, #3CC8C3 100%)",
-                                        borderRadius: "9px",
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#FFF",
-                                        fontSize: "17px",
-                                        boxShadow: "0 4px 10px rgba(15, 157, 154, 0.3)"
-                                    }}
-                                >
-                                    ⚡
-                                </span>
-                                PrepPilot <span style={{ color: "#0F9D9A" }}>AI</span>
-                            </h4>
+                        <Link to="/" className="text-decoration-none d-flex align-items-center" onClick={handleNavClick}>
+                            <img
+                                src="/logo.png"
+                                alt="PrepPilot AI"
+                                style={{ height: "38px", width: "auto", maxWidth: "185px", objectFit: "contain" }}
+                            />
                         </Link>
 
                         {/* Mobile Close Button */}
@@ -169,18 +155,18 @@ function Sidebar({ isOpen = false, onClose }) {
 
                     {/* Pro Tier Mini Card */}
                     <div
-                        className="mt-4 p-3 rounded-4"
+                        className="mt-4 p-3 rounded-3"
                         style={{
                             background: "linear-gradient(135deg, #F0FDF4 0%, #E6F8F7 100%)",
-                            border: "1px solid #A7F3D0"
+                            border: "1px solid #C4F1ED"
                         }}
                     >
-                        <div className="d-flex align-items-center gap-2 mb-1">
-                            <span style={{ fontSize: "15px" }}>⭐</span>
-                            <strong style={{ color: "#0F766E", fontSize: "13px" }}>Free Candidate Access</strong>
+                        <div className="d-flex align-items-center gap-1.5 mb-1">
+                            <span style={{ fontSize: "14px" }}>✨</span>
+                            <strong style={{ color: "#0F766E", fontSize: "12px", letterSpacing: "0.2px" }}>Active Candidate Access</strong>
                         </div>
-                        <small className="text-secondary d-block" style={{ fontSize: "12px", lineHeight: "1.45" }}>
-                            Unlimited AI mock interviews, speech analysis, and model answer breakdowns.
+                        <small className="text-secondary d-block" style={{ fontSize: "11.5px", lineHeight: "1.45" }}>
+                            Full access to speech analysis, AI feedback, and tailored question generation.
                         </small>
                     </div>
                 </div>

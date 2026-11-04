@@ -14,7 +14,7 @@ function Banner() {
         <div
             className="p-3 p-sm-4 p-md-5 rounded-4 position-relative overflow-hidden shadow-sm"
             style={{
-                background: "linear-gradient(135deg, #0A2540 0%, #0F3A4C 60%, #0F9D9A 100%)",
+                background: "linear-gradient(135deg, #092C3E 0%, #0E4856 50%, #0F9D9A 100%)",
                 color: "#FFFFFF",
                 borderRadius: "22px"
             }}

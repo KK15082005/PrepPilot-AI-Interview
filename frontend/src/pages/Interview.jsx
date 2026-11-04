@@ -378,23 +378,28 @@ function Interview() {
     const answeredCount = Object.keys(submittedMap).length;
 
     return (
-        <div className="container mt-4 mb-5" style={{ maxWidth: "860px" }}>
+        <div className="container mt-3 mt-md-4 mb-5" style={{ maxWidth: "860px", padding: "0 16px" }}>
             {/* Header */}
-            <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                <div>
-                    <h3 className="fw-bold mb-1" style={{ color: "#183B56" }}>
-                        🎤 {interviewData?.role ? `${interviewData.role} Mock Interview` : "AI Mock Interview"}
-                    </h3>
-                    <span className="text-secondary" style={{ fontSize: "14px" }}>
-                        Question {currentQuestion + 1} of {questions.length} • {answeredCount} answered
-                        {interviewData?.difficulty && ` • ${interviewData.difficulty} Level`}
-                    </span>
+            <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 pb-2">
+                <div className="d-flex align-items-center gap-2.5">
+                    <Link to="/" className="text-decoration-none d-none d-sm-inline-flex align-items-center me-1">
+                        <img src="/logo-icon.png" alt="PrepPilot AI" style={{ height: "32px", objectFit: "contain" }} />
+                    </Link>
+                    <div>
+                        <h3 className="fw-bold mb-1" style={{ color: "#0F172A", fontSize: "clamp(1.15rem, 2.5vw, 1.4rem)" }}>
+                            🎤 {interviewData?.role ? `${interviewData.role} Mock Interview` : "AI Mock Interview"}
+                        </h3>
+                        <span className="text-secondary" style={{ fontSize: "13px" }}>
+                            Question {currentQuestion + 1} of {questions.length} • {answeredCount} answered
+                            {interviewData?.difficulty && ` • ${interviewData.difficulty} Level`}
+                        </span>
+                    </div>
                 </div>
 
                 <div className="d-flex align-items-center gap-2 flex-wrap">
                     {/* Live Countdown Timer Badge */}
                     <div
-                        className={`d-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-semibold shadow-sm ${
+                        className={`d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill fw-semibold shadow-sm ${
                             timeLeft <= 60 && timeLeft > 0 ? "timer-urgent" : ""
                         }`}
                         style={getTimerStyle(timeLeft)}
@@ -405,20 +410,21 @@ function Interview() {
                             {formatTime(timeLeft)}
                         </span>
                         <small className="d-none d-sm-inline" style={{ fontSize: "11px", opacity: 0.85 }}>
-                            {timeLeft === 0 ? "Session Expired" : "Remaining"}
+                            {timeLeft === 0 ? "Expired" : "Remaining"}
                         </small>
                     </div>
 
                     {isCurrentSubmitted && (
-                        <span className="badge bg-success-subtle text-success border border-success px-3 py-2 rounded-pill">
-                            ✓ Answer Evaluated
+                        <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1.5 rounded-pill" style={{ fontSize: "12px" }}>
+                            ✓ Evaluated
                         </span>
                     )}
 
                     <button
-                        className="btn btn-sm btn-outline-danger px-3 py-2 rounded-pill fw-semibold"
+                        className="btn btn-sm btn-outline-danger px-3 py-1.5 rounded-pill fw-semibold"
                         onClick={handleFinishInterview}
                         title="Finish interview and view AI score breakdown"
+                        style={{ fontSize: "12px" }}
                     >
                         Finish & View Results
                     </button>
@@ -427,8 +433,8 @@ function Interview() {
 
             {/* Expired Session Notice */}
             {timeLeft === 0 && (
-                <div className="alert alert-warning py-2 px-3 mb-3 d-flex align-items-center gap-2 rounded-3 shadow-sm" style={{ fontSize: "14px" }}>
-                    <i className="bi bi-clock-history flex-shrink-0" style={{ fontSize: "18px" }}></i>
+                <div className="alert alert-warning py-2 px-3 mb-3 d-flex align-items-center gap-2 rounded-3 shadow-sm" style={{ fontSize: "13px" }}>
+                    <i className="bi bi-clock-history flex-shrink-0" style={{ fontSize: "17px" }}></i>
                     <div className="flex-grow-1">
                         <strong>Time's up!</strong> The allotted {interviewData?.duration || 15} minutes have concluded. Take your time to finish submitting your answer, then click <strong>Finish & View Results</strong> to review your full AI evaluation.
                     </div>
@@ -437,35 +443,37 @@ function Interview() {
 
             {/* Question Card */}
             <div
-                className="card border-0 shadow-sm p-4 mb-4"
+                className="card border-0 shadow-sm p-3 p-sm-4 mb-3 mb-sm-4"
                 style={{
                     borderRadius: "18px",
                     background: "#FFFFFF",
-                    borderLeft: "5px solid #27b3ae",
+                    borderLeft: "5px solid #0F9D9A",
+                    border: "1px solid #E2E8F0",
                 }}
             >
-                <div className="d-flex justify-content-between align-items-start gap-3">
-                    <h4 className="fw-bold mb-3" style={{ color: "#1E293B", lineHeight: "1.4" }}>
+                <div className="d-flex justify-content-between align-items-start gap-2 gap-sm-3">
+                    <h4 className="fw-bold mb-2" style={{ color: "#0F172A", lineHeight: "1.4", fontSize: "clamp(1.05rem, 2.2vw, 1.25rem)" }}>
                         {current?.question}
                     </h4>
                     <button
-                        className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
+                        className="btn btn-sm btn-light border d-flex align-items-center gap-1 text-nowrap flex-shrink-0"
                         onClick={() => speakQuestion(current?.question)}
                         title="Replay Audio"
+                        style={{ fontSize: "12px" }}
                     >
-                        <i className="bi bi-volume-up-fill"></i> Replay Audio
+                        <i className="bi bi-volume-up-fill" style={{ color: "#0F9D9A" }}></i> Replay Audio
                     </button>
                 </div>
 
                 <div className="d-flex gap-2 flex-wrap mt-2">
-                    <span className="badge bg-light text-dark border px-3 py-2">
+                    <span className="badge bg-light text-dark border px-2.5 py-1 rounded-pill" style={{ fontSize: "11px" }}>
                         <strong>Type:</strong> {current?.questionType || "General"}
                     </span>
-                    <span className="badge bg-light text-dark border px-3 py-2">
+                    <span className="badge bg-light text-dark border px-2.5 py-1 rounded-pill" style={{ fontSize: "11px" }}>
                         <strong>Topic:</strong> {current?.topic || "Core"}
                     </span>
                     {interviewData?.duration && (
-                        <span className="badge bg-light text-dark border px-3 py-2">
+                        <span className="badge bg-light text-secondary border px-2.5 py-1 rounded-pill" style={{ fontSize: "11px" }}>
                             <strong>Session:</strong> {interviewData.duration} Mins
                         </span>
                     )}
@@ -473,9 +481,14 @@ function Interview() {
             </div>
 
             {/* Answer Section */}
-            <div className="card border-0 shadow-sm p-4" style={{ borderRadius: "18px" }}>
+            <div
+                className="card border-0 shadow-sm p-3 p-sm-4"
+                style={{ borderRadius: "18px", background: "#FFFFFF", border: "1px solid #E2E8F0" }}
+            >
                 <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-                    <h5 className="fw-bold mb-0">Your Answer</h5>
+                    <h5 className="fw-bold mb-0" style={{ color: "#0F172A", fontSize: "16px" }}>
+                        Your Answer
+                    </h5>
 
                     {/* Speech to Text Toggle Button */}
                     <div className="d-flex align-items-center gap-2">
@@ -483,16 +496,17 @@ function Interview() {
                             type="button"
                             className={`btn btn-sm ${
                                 isListening ? "btn-danger mic-recording-active" : "btn-outline-primary"
-                            } px-3 py-2 rounded-pill d-flex align-items-center gap-2`}
+                            } px-3 py-1.5 rounded-pill d-flex align-items-center gap-1.5 fw-semibold`}
                             onClick={toggleListening}
                             disabled={isEvaluating}
+                            style={{ fontSize: "13px" }}
                         >
                             <i className={`bi ${isListening ? "bi-mic-mute-fill" : "bi-mic-fill"}`}></i>
                             {isListening ? "Stop Recording" : "Speak Answer"}
                         </button>
                         {isListening && (
-                            <span className="badge bg-danger text-white px-2 py-1 rounded-pill animate-pulse">
-                                ● Listening...
+                            <span className="badge bg-danger text-white px-2 py-1 rounded-pill animate-pulse" style={{ fontSize: "11px" }}>
+                                ● Listening
                             </span>
                         )}
                     </div>
@@ -503,30 +517,32 @@ function Interview() {
 
                 <textarea
                     className="form-control"
-                    rows="7"
+                    rows="6"
                     placeholder="Type your answer here or click 'Speak Answer' to speak using your microphone..."
                     value={answer}
                     onChange={handleAnswerChange}
                     disabled={isEvaluating}
                     style={{
                         borderRadius: "12px",
-                        fontSize: "15px",
+                        fontSize: "14px",
                         lineHeight: "1.6",
+                        borderColor: "#CBD5E1"
                     }}
                 />
 
-                <small className="text-secondary mt-2">
-                    💡 Tip: You can speak, pause, edit your text, and click <strong>Submit Answer</strong> when you're ready for AI evaluation.
+                <small className="text-secondary mt-2" style={{ fontSize: "12px" }}>
+                    💡 Tip: Speak naturally or type clearly. Click <strong>Submit Answer</strong> when you're ready for AI scoring and feedback.
                 </small>
 
                 {/* Status / Alert Banner */}
                 {statusMessage && (
-                    <div className={`alert alert-${statusMessage.type} mt-3 mb-0 d-flex align-items-center justify-content-between`} role="alert">
+                    <div className={`alert alert-${statusMessage.type} mt-3 mb-0 d-flex align-items-center justify-content-between rounded-3`} role="alert" style={{ fontSize: "13px" }}>
                         <div>{statusMessage.text}</div>
                         <button
                             type="button"
                             className="btn-close ms-2"
                             onClick={() => setStatusMessage(null)}
+                            aria-label="Close"
                         ></button>
                     </div>
                 )}
@@ -535,7 +551,7 @@ function Interview() {
                 <div className="mt-3 d-flex justify-content-end">
                     <button
                         type="button"
-                        className="btn px-4 py-2 fw-semibold text-white d-flex align-items-center gap-2"
+                        className="btn px-4 py-2.5 fw-semibold text-white d-flex align-items-center gap-2"
                         style={{
                             background: isEvaluating
                                 ? "#80CBC4"
@@ -543,6 +559,7 @@ function Interview() {
                             border: "none",
                             borderRadius: "10px",
                             boxShadow: "0 4px 14px rgba(15,157,154,0.25)",
+                            fontSize: "14px"
                         }}
                         onClick={handleSubmitAnswer}
                         disabled={isEvaluating || !answer.trim()}
@@ -570,31 +587,35 @@ function Interview() {
             </div>
 
             {/* Navigation Buttons */}
-            <div className="mt-4 d-flex justify-content-between align-items-center">
+            <div className="mt-4 d-flex justify-content-between align-items-center gap-2">
                 <button
-                    className="btn btn-outline-secondary px-4 py-2 rounded-3"
+                    className="btn btn-outline-secondary px-3 px-sm-4 py-2 rounded-3 fw-semibold"
                     disabled={currentQuestion === 0 || isEvaluating}
                     onClick={goToPrevious}
+                    style={{ fontSize: "14px", height: "42px" }}
                 >
                     <i className="bi bi-arrow-left me-1"></i> Previous
                 </button>
 
                 {currentQuestion === questions.length - 1 ? (
                     <button
-                        className="btn btn-success px-4 py-2 rounded-3 fw-semibold"
+                        className="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm"
                         disabled={isEvaluating}
                         onClick={handleFinishInterview}
+                        style={{ fontSize: "14px", height: "42px" }}
                     >
                         <i className="bi bi-check2-circle me-1"></i> Finish Interview
                     </button>
                 ) : (
                     <button
-                        className="btn btn-primary px-4 py-2 rounded-3 fw-semibold"
+                        className="btn btn-primary px-3 px-sm-4 py-2 rounded-3 fw-semibold shadow-sm"
                         disabled={isEvaluating}
                         onClick={goToNext}
                         style={{
                             background: "#0F9D9A",
                             borderColor: "#0F9D9A",
+                            fontSize: "14px",
+                            height: "42px"
                         }}
                     >
                         Next Question <i className="bi bi-arrow-right ms-1"></i>

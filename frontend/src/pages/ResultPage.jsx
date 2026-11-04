@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
     FiArrowLeft,
-    FiPrinter,
+    FiDownload,
     FiCheckCircle,
     FiAlertCircle,
     FiAward,
@@ -69,9 +69,19 @@ function ResultPage() {
         }));
     };
 
-    const handlePrint = () => {
-        toast("Opening print dialog...", { icon: "🖨️", duration: 2500 });
-        window.print();
+    const handleSavePdf = () => {
+        // Expand all questions so the full evaluation appears in the PDF
+        const allOpen = {};
+        if (breakdown && breakdown.length) {
+            breakdown.forEach((_, idx) => {
+                allOpen[idx] = true;
+            });
+            setOpenQuestions(allOpen);
+        }
+        toast.success("Preparing report... Save as PDF", { icon: "📄", duration: 2500 });
+        setTimeout(() => {
+            window.print();
+        }, 350);
     };
 
     const handleCopySummary = () => {
@@ -151,16 +161,60 @@ function ResultPage() {
     else if (avgScore < 7) ratingBadgeClass = "bg-warning text-dark";
 
     return (
-        <div style={{ background: "#FCFEFE", minHeight: "100vh", padding: "40px 0 80px" }}>
-            <div className="container" style={{ maxWidth: "940px" }}>
+        <div style={{ background: "#FCFEFE", minHeight: "100vh", padding: "clamp(20px, 3.5vw, 40px) 16px 80px" }}>
+            <style>{`
+                @media print {
+                    @page {
+                        margin: 12mm 15mm;
+                        size: A4 portrait;
+                    }
+                    html, body, #root {
+                        overflow: visible !important;
+                        overflow-x: visible !important;
+                        height: auto !important;
+                        min-height: auto !important;
+                        display: block !important;
+                        background: #FFFFFF !important;
+                        color: #0F172A !important;
+                    }
+                    .no-print {
+                        display: none !important;
+                    }
+                    * {
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                    }
+                    .card {
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
+                        box-shadow: none !important;
+                        border: 1px solid #CBD5E1 !important;
+                        margin-bottom: 16px !important;
+                    }
+                    .print-show-always {
+                        display: block !important;
+                    }
+                }
+            `}</style>
+            <div className="container" style={{ maxWidth: "940px", padding: 0 }}>
+                {/* Print Header */}
+                <div className="d-none d-print-block mb-4 pb-2 border-bottom">
+                    <img src="/logo.png" alt="PrepPilot AI" style={{ height: "40px", objectFit: "contain" }} />
+                </div>
+
                 {/* Top Navigation */}
-                <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                    <button
-                        className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
-                        onClick={() => navigate("/dashboard")}
-                    >
-                        <FiArrowLeft /> Back to Dashboard
-                    </button>
+                <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 no-print">
+                    <div className="d-flex align-items-center gap-3">
+                        <Link to="/" className="text-decoration-none d-flex align-items-center">
+                            <img src="/logo.png" alt="PrepPilot AI" style={{ height: "36px", objectFit: "contain" }} />
+                        </Link>
+                        <button
+                            className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
+                            onClick={() => navigate("/dashboard")}
+                        >
+                            <FiArrowLeft /> Back to Dashboard
+                        </button>
+                    </div>
 
                     <div className="d-flex gap-2 flex-wrap">
                         <button
@@ -171,11 +225,11 @@ function ResultPage() {
                         </button>
                         <button
                             className="btn btn-sm btn-light border d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
-                            onClick={handlePrint}
+                            onClick={handleSavePdf}
                         >
-                            <FiPrinter /> Print / Save PDF
+                            <FiDownload /> Save as PDF
                         </button>
-                        <Link to="/createinterview">
+                        <Link to="/createinterview" className="text-decoration-none">
                             <button
                                 className="btn btn-sm text-white d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
                                 style={{ background: "linear-gradient(135deg,#0F9D9A,#3CC8C3)", border: "none" }}
@@ -301,15 +355,22 @@ function ResultPage() {
                             </div>
 
                             {result?.strengths && result.strengths.length > 0 ? (
-                                <div className="d-flex flex-wrap gap-2">
+                                <div className="d-flex flex-column gap-2">
                                     {result.strengths.map((s, idx) => (
-                                        <span
+                                        <div
                                             key={idx}
-                                            className="badge bg-white text-success border border-success-subtle px-3 py-2 rounded-pill fw-medium"
-                                            style={{ fontSize: "13px" }}
+                                            className="p-2.5 px-3 rounded-3 bg-white border border-success-subtle d-flex align-items-start gap-2 shadow-sm"
+                                            style={{
+                                                fontSize: "13.5px",
+                                                lineHeight: "1.5",
+                                                color: "#065F46",
+                                                whiteSpace: "normal",
+                                                wordBreak: "break-word"
+                                            }}
                                         >
-                                            ✓ {s}
-                                        </span>
+                                            <span className="text-success flex-shrink-0 fw-bold" style={{ fontSize: "14px", marginTop: "1px" }}>✓</span>
+                                            <span className="flex-grow-1">{s}</span>
+                                        </div>
                                     ))}
                                 </div>
                             ) : (
@@ -336,15 +397,22 @@ function ResultPage() {
                             </div>
 
                             {result?.weakness && result.weakness.length > 0 ? (
-                                <div className="d-flex flex-wrap gap-2">
+                                <div className="d-flex flex-column gap-2">
                                     {result.weakness.map((w, idx) => (
-                                        <span
+                                        <div
                                             key={idx}
-                                            className="badge bg-white text-dark border border-warning-subtle px-3 py-2 rounded-pill fw-medium"
-                                            style={{ fontSize: "13px" }}
+                                            className="p-2.5 px-3 rounded-3 bg-white border border-warning-subtle d-flex align-items-start gap-2 shadow-sm"
+                                            style={{
+                                                fontSize: "13.5px",
+                                                lineHeight: "1.5",
+                                                color: "#78350F",
+                                                whiteSpace: "normal",
+                                                wordBreak: "break-word"
+                                            }}
                                         >
-                                            🎯 {w}
-                                        </span>
+                                            <span className="flex-shrink-0" style={{ fontSize: "14px", marginTop: "1px" }}>🎯</span>
+                                            <span className="flex-grow-1">{w}</span>
+                                        </div>
                                     ))}
                                 </div>
                             ) : (
@@ -379,43 +447,42 @@ function ResultPage() {
                             >
                                 {/* Question Accordion Header */}
                                 <div
-                                    className="p-4 d-flex justify-content-between align-items-center"
+                                    className="p-3 p-sm-4 d-flex justify-content-between align-items-center"
                                     style={{ cursor: "pointer", background: isOpen ? "#F8FAFC" : "#FFFFFF" }}
                                     onClick={() => toggleQuestion(index)}
                                 >
-                                    <div className="me-3">
-                                        <div className="d-flex align-items-center gap-2 mb-2 flex-wrap">
-                                            <span className="badge bg-light text-dark border px-2 py-1">
+                                    <div className="me-2 me-sm-3" style={{ minWidth: 0 }}>
+                                        <div className="d-flex align-items-center gap-1.5 gap-sm-2 mb-2 flex-wrap">
+                                            <span className="badge bg-light text-dark border px-2 py-1" style={{ fontSize: "11px" }}>
                                                 Question {index + 1}
                                             </span>
-                                            <span className="badge bg-light text-secondary border px-2 py-1">
+                                            <span className="badge bg-light text-secondary border px-2 py-1" style={{ fontSize: "11px" }}>
                                                 {item.questionType || "General"}
                                             </span>
-                                            <span className="badge bg-light text-secondary border px-2 py-1">
+                                            <span className="badge bg-light text-secondary border px-2 py-1" style={{ fontSize: "11px" }}>
                                                 {item.topic || "Core"}
                                             </span>
                                         </div>
-                                        <h5 className="fw-bold mb-0" style={{ color: "#1E293B", fontSize: "17px" }}>
+                                        <h5 className="fw-bold mb-0" style={{ color: "#1E293B", fontSize: "clamp(15px, 2.5vw, 17px)", lineHeight: "1.4" }}>
                                             {item.question}
                                         </h5>
                                     </div>
 
-                                    <div className="d-flex align-items-center gap-3 flex-shrink-0">
+                                    <div className="d-flex align-items-center gap-2 gap-sm-3 flex-shrink-0">
                                         <div className="text-end">
-                                            <span className="fw-bold" style={{ fontSize: "18px", color: qScore >= 7 ? "#10B981" : qScore >= 5 ? "#F59E0B" : "#EF4444" }}>
+                                            <span className="fw-bold" style={{ fontSize: "clamp(15px, 2vw, 18px)", color: qScore >= 7 ? "#10B981" : qScore >= 5 ? "#F59E0B" : "#EF4444" }}>
                                                 {item.isAnswered ? `${qScore} / 10` : "Skipped"}
                                             </span>
                                         </div>
-                                        <button className="btn btn-sm btn-light border rounded-circle p-2">
+                                        <button className="btn btn-sm btn-light border rounded-circle p-1.5 p-sm-2" style={{ width: "34px", height: "34px" }}>
                                             {isOpen ? <FiChevronUp /> : <FiChevronDown />}
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* Accordion Content */}
-                                {isOpen && (
-                                    <div className="card-body p-4 pt-3 border-top">
-                                        {/* Candidate's Answer */}
+                                <div className={`card-body p-4 pt-3 border-top ${isOpen ? "" : "d-none print-show-always"}`}>
+                                    {/* Candidate's Answer */}
                                         <div className="mb-3">
                                             <strong className="d-block text-secondary mb-1" style={{ fontSize: "13px" }}>
                                                 YOUR ANSWER:
@@ -504,7 +571,6 @@ function ResultPage() {
                                             </div>
                                         )}
                                     </div>
-                                )}
                             </div>
                         );
                     })}
@@ -512,7 +578,7 @@ function ResultPage() {
 
                 {/* Bottom Call to Action */}
                 <div
-                    className="card border-0 p-5 text-center mt-5"
+                    className="card border-0 p-4 p-sm-5 text-center mt-5 no-print"
                     style={{
                         borderRadius: "24px",
                         background: "linear-gradient(135deg,#EEF8F8 0%,#F9FEFE 100%)",
