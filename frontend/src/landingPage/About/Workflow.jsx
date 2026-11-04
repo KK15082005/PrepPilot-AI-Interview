@@ -1,5 +1,5 @@
 import React from 'react';
-import "./workflow.css";
+import "./Workflow.css";
 
 function Workflow() {
     const steps = [
