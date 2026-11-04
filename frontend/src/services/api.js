@@ -1,8 +1,48 @@
 import axios from "axios";
 
+/**
+ * Resolves and normalizes the backend API base URL:
+ * - Uses Vite convention `import.meta.env.VITE_API_URL`
+ * - Also supports `import.meta.env.VITE_API_BASE_URL` for backwards compatibility
+ * - Normalizes trailing slashes (e.g., "https://backend.vercel.app/" -> "https://backend.vercel.app")
+ * - Ensures the `/api` route prefix is present without duplication
+ * - In production, NEVER falls back to localhost:3000
+ * - In local development, falls back to "http://localhost:3000/api"
+ */
+function resolveApiBaseUrl() {
+    const rawEnvUrl = (
+        import.meta.env.VITE_API_URL ||
+        import.meta.env.VITE_API_BASE_URL ||
+        ""
+    ).trim().replace(/^["']|["']$/g, "");
+
+    if (rawEnvUrl) {
+        // Strip trailing slashes
+        const sanitized = rawEnvUrl.replace(/\/+$/, "");
+        // Avoid duplicate /api
+        return sanitized.endsWith("/api") ? sanitized : `${sanitized}/api`;
+    }
+
+    // In production, strictly avoid any localhost fallback
+    if (import.meta.env.PROD) {
+        console.warn(
+            "[PrepPilot API] Neither VITE_API_URL nor VITE_API_BASE_URL is set in environment. Falling back to same-origin '/api'."
+        );
+        return "/api";
+    }
+
+    // Default for local development
+    return "http://localhost:3000/api";
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
+
 const API = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
+    baseURL: API_BASE_URL,
     withCredentials: true,
+    headers: {
+        "Content-Type": "application/json",
+    },
 });
 
 // Request interceptor to automatically attach JWT token
@@ -39,4 +79,3 @@ API.interceptors.response.use(
 );
 
 export default API;
-
