@@ -69,7 +69,7 @@ function SignUp() {
         <div
             className="container-fluid py-4"
             style={{
-                minHeight: "100vh",
+                minHeight: "calc(100vh - 66px)",
                 background: "linear-gradient(135deg, #F8FCFC 0%, #EEF8F8 55%, #FCFEFE 100%)",
                 display: "flex",
                 alignItems: "center"

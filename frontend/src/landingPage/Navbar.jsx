@@ -11,11 +11,18 @@ function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    setIsLoggedIn(Boolean(token));
-    setUserName(user?.username || "");
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      setIsLoggedIn(Boolean(token));
+      setUserName(user?.username || "");
+    };
+
+    checkAuth();
     setMobileMenuOpen(false); // Auto close on route change
+
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
   }, [location.pathname]);
 
   const navLinks = [
@@ -28,7 +35,7 @@ function Navbar() {
 
   return (
     <nav
-      className="navbar navbar-expand-lg sticky-top py-2.5 py-lg-3"
+      className="navbar navbar-expand-lg sticky-top py-2.5 py-lg-3 no-print d-print-none"
       style={{
         background: "rgba(255, 255, 255, 0.95)",
         backdropFilter: "blur(12px)",
@@ -102,7 +109,7 @@ function Navbar() {
               <div className="d-flex align-items-center gap-2 w-100 w-lg-auto">
                 <Link to="/login" className="flex-grow-1 flex-lg-grow-0" style={{ textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>
                   <button
-                    className="btn btn-nav-login w-100 px-3 py-2"
+                    className={`btn btn-nav-login w-100 px-3 py-2 ${location.pathname === "/login" ? "active" : ""}`}
                     style={{ fontSize: "14px" }}
                   >
                     Login
