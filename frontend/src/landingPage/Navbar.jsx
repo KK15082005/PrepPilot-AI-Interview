@@ -65,20 +65,15 @@ function Navbar() {
 
         {/* Navigation Menu */}
         <div className={`collapse navbar-collapse ${mobileMenuOpen ? "show" : ""}`} id="navbarSupportedContent">
-          <ul className="navbar-nav mx-auto mb-2 mb-lg-0 py-3 py-lg-0 gap-1 gap-lg-0">
+          <ul className="navbar-nav mx-auto mb-2 mb-lg-0 py-3 py-lg-0 gap-1 gap-lg-1">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.to;
               return (
-                <li className="nav-item mx-lg-2" key={link.to}>
+                <li className="nav-item mx-lg-1" key={link.to}>
                   <Link
-                    className="nav-link px-2 py-1 rounded-2"
+                    className={`nav-link-custom ${isActive ? "active" : ""}`}
                     to={link.to}
                     onClick={() => setMobileMenuOpen(false)}
-                    style={{
-                      color: isActive ? "#0F9D9A" : "#475569",
-                      fontWeight: isActive ? "600" : "500",
-                      background: isActive ? "rgba(15, 157, 154, 0.08)" : "transparent",
-                    }}
                   >
                     {link.label}
                   </Link>
@@ -88,7 +83,7 @@ function Navbar() {
           </ul>
 
           {/* Action CTAs */}
-          <div className="d-flex align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0 mt-2 mt-lg-0">
+          <div className="d-flex align-items-center gap-2">
             {isLoggedIn ? (
               <Link to="/dashboard" className="w-100 w-lg-auto text-decoration-none" onClick={() => setMobileMenuOpen(false)}>
                 <button
