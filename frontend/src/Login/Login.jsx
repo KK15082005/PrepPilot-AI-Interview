@@ -181,12 +181,6 @@ function Login() {
                             Create one for free
                         </Link>
                     </div>
-
-                    <div className="text-center mt-3 pt-3 border-top">
-                        <Link to="/" style={{ color: "#64748B", fontSize: "12.5px", textDecoration: "none" }} className="d-inline-flex align-items-center gap-1">
-                            <FiArrowLeft size={13} /> Return to Landing Page
-                        </Link>
-                    </div>
                 </form>
             </div>
         </div>
