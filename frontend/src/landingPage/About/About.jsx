@@ -1,6 +1,6 @@
 import React from 'react';
 import Hero from './Hero';
-import Trust from './trust';
+import Trust from './Trust';
 import FeatureCard1 from './FeatureCard1';
 import FeatureCard2 from './FeatureCard2';
 import Workflow from './Workflow';
