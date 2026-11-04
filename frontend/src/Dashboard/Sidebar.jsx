@@ -1,5 +1,5 @@
 import React from "react";
-import { FiHome, FiMic, FiBarChart2, FiBookmark, FiFileText, FiSettings, FiLogOut, FiX } from "react-icons/fi";
+import { FiHome, FiMic, FiBarChart2, FiBookmark, FiFileText, FiSettings, FiLogOut, FiX, FiArrowLeft } from "react-icons/fi";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import API from "../services/api";
@@ -120,6 +120,21 @@ function Sidebar({ isOpen = false, onClose }) {
                             >
                                 <FiMic size={19} />
                                 <span className="ms-3">New Mock Session</span>
+                            </div>
+                        </Link>
+
+                        <Link to="/" className="text-decoration-none" onClick={handleNavClick}>
+                            <div
+                                className="d-flex align-items-center p-3 rounded-3 hover-item"
+                                style={{
+                                    color: "#475569",
+                                    fontWeight: "500",
+                                    fontSize: "14px",
+                                    transition: "all 0.15s ease"
+                                }}
+                            >
+                                <FiArrowLeft size={19} />
+                                <span className="ms-3">Main Website</span>
                             </div>
                         </Link>
 

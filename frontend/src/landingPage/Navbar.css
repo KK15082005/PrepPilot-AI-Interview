@@ -1,21 +1,79 @@
 .navbar {
-    padding: 14px 0;
-}
-
-.nav-link {
-    color: #475569;
-    font-weight: 500;
-    transition: 0.2s ease;
-    text-decoration: none !important;
-}
-
-.nav-link:hover {
-    color: #0F9D9A;
-    text-decoration: none !important;
+    padding: 12px 0;
 }
 
 .navbar-brand {
     letter-spacing: -0.5px;
+    text-decoration: none !important;
+}
+
+/* Navbar Nav Links with Rich Hover Effect */
+.nav-link-custom {
+    color: #475569 !important;
+    font-weight: 500;
+    padding: 8px 14px !important;
+    border-radius: 8px;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    display: inline-block;
+}
+
+.nav-link-custom:hover {
+    color: #0F9D9A !important;
+    background-color: rgba(15, 157, 154, 0.08) !important;
+    transform: translateY(-1px);
+    text-decoration: none !important;
+}
+
+.nav-link-custom.active {
+    color: #0F9D9A !important;
+    font-weight: 600 !important;
+    background-color: rgba(15, 157, 154, 0.12) !important;
+}
+
+/* Login Button: Changes from Outline to Solid Brand Teal on Hover */
+.btn-nav-login {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+    border: 1.5px solid #CBD5E1 !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 8px 20px !important;
+    transition: all 0.22s ease !important;
+    text-decoration: none !important;
+}
+
+.btn-nav-login:hover,
+.btn-nav-login:focus {
+    background-color: #0F9D9A !important;
+    color: #FFFFFF !important;
+    border-color: #0F9D9A !important;
+    box-shadow: 0 4px 14px rgba(15, 157, 154, 0.35) !important;
+    transform: translateY(-1px);
+    text-decoration: none !important;
+}
+
+/* Get Started Free Button: Solid Brand Teal */
+.btn-nav-signup {
+    background-color: #0F9D9A !important;
+    background-image: none !important;
+    color: #FFFFFF !important;
+    border: 1.5px solid #0F9D9A !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 8px 22px !important;
+    box-shadow: 0 2px 8px rgba(15, 157, 154, 0.25) !important;
+    transition: all 0.22s ease !important;
+    text-decoration: none !important;
+}
+
+.btn-nav-signup:hover,
+.btn-nav-signup:focus {
+    background-color: #0B7E7C !important;
+    border-color: #0B7E7C !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 18px rgba(15, 157, 154, 0.45) !important;
+    transform: translateY(-1px);
     text-decoration: none !important;
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
+import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiArrowLeft } from "react-icons/fi";
 import toast from 'react-hot-toast';
 import API from '../services/api';
 
@@ -103,6 +103,21 @@ function SignUp() {
                                 margin: "0 auto"
                             }}
                         >
+                            {/* Back to Landing Page Button */}
+                            <div className="d-flex justify-content-start mb-3">
+                                <Link
+                                    to="/"
+                                    className="text-decoration-none d-inline-flex align-items-center gap-1.5 text-white fw-semibold btn btn-sm border-0 px-3 py-1.5 rounded-pill shadow-sm"
+                                    style={{
+                                        fontSize: "12.5px",
+                                        background: "linear-gradient(135deg, #0F9D9A, #3CC8C3)",
+                                        color: "#ffffff"
+                                    }}
+                                >
+                                    <FiArrowLeft size={14} style={{ color: "#ffffff" }} /> <span className="text-white" style={{ color: "#ffffff" }}>Back to Home</span>
+                                </Link>
+                            </div>
+
                             <div className="mb-4 text-center text-sm-start">
                                 <Link to="/" className="text-decoration-none d-inline-flex align-items-center mb-2">
                                     <img
