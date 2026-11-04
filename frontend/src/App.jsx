@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import Navbar from './landingPage/Navbar';
 import LandingPage from './pages/LandingPage';
 import Features from './landingPage/features/features';
 import WorkFlow from './landingPage/workFlow/workflowpage';
@@ -52,6 +53,7 @@ function App() {
           },
         }}
       />
+      <Navbar />
       <Routes>
         {/* Public Routes */}
         <Route path='/' element={<LandingPage />} />

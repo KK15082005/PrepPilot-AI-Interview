@@ -1,12 +1,10 @@
 import React from 'react';
-import Navbar from '../Navbar';
 import WorkFlow from './wrokflow';
 import Footer from '../footer';
 
 function Workflowpage() {
     return (
         <>
-            <Navbar/>
             <WorkFlow/>
             <Footer/>
         </>

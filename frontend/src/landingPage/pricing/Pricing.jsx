@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from '../Navbar';
 import Footer from '../footer';
 import { Link } from 'react-router-dom';
 import { FiCheck, FiX, FiHelpCircle } from 'react-icons/fi';
@@ -77,9 +76,7 @@ function Pricing() {
     ];
 
     return (
-        <div style={{ background: "#F8FCFB", minHeight: "100vh" }}>
-            <Navbar />
-
+        <div style={{ background: "#F8FCFB", minHeight: "calc(100vh - 66px)" }}>
             {/* Header */}
             <div className="container text-center py-5">
                 <span className="badge px-3 py-2 rounded-pill fw-semibold mb-3" style={{ background: "#E8FAF8", color: "#0F9D9A", border: "1px solid #C4F1ED" }}>

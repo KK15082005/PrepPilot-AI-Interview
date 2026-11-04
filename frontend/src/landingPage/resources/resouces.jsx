@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from '../Navbar';
 import Footer from '../footer';
 import { Link } from 'react-router-dom';
 import { FiBookOpen, FiCheckSquare, FiAward, FiMessageSquare } from 'react-icons/fi';
@@ -37,9 +36,7 @@ function Resoources() {
     ];
 
     return (
-        <div style={{ background: "#F8FCFB", minHeight: "100vh" }}>
-            <Navbar />
-
+        <div style={{ background: "#F8FCFB", minHeight: "calc(100vh - 66px)" }}>
             {/* Header */}
             <div className="container py-5 text-center">
                 <span className="badge px-3 py-2 rounded-pill fw-semibold mb-3" style={{ background: "#E8FAF8", color: "#0F9D9A", border: "1px solid #C4F1ED" }}>
