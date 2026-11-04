@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FiArrowLeft, FiAlertCircle, FiBriefcase, FiBookmark, FiClock, FiLayers, FiSliders, FiTrendingUp } from "react-icons/fi";
 import toast from "react-hot-toast";
 import API from "../services/api";
 
 function CreateInterview() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isGenerating, setIsGenerating] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [formData, setFormData] = useState({
@@ -16,6 +17,22 @@ function CreateInterview() {
     difficulty: "Medium",
     duration: "15",
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const roleParam = params.get("role");
+    if (roleParam) {
+      setFormData((prev) => ({
+        ...prev,
+        role: roleParam,
+        title: `${roleParam} Mock Round`,
+        interviewType:
+          roleParam.toLowerCase().includes("behavioral") || roleParam.toLowerCase().includes("hr")
+            ? "Behavioral"
+            : "Technical",
+      }));
+    }
+  }, [location.search]);
 
   const popularRoles = [
     { label: "React Developer", type: "Technical" },
@@ -92,14 +109,17 @@ function CreateInterview() {
   return (
     <div
       style={{
-        minHeight: "calc(100vh - 66px)",
+        minHeight: "100vh",
         background: "linear-gradient(135deg, #F8FAFC 0%, #EEF8F8 55%, #FCFEFE 100%)",
         padding: "clamp(20px, 4vw, 40px) 16px 60px",
       }}
     >
       <div className="container" style={{ maxWidth: "840px" }}>
-        {/* Subheader Navigation */}
-        <div className="d-flex justify-content-start align-items-center mb-3">
+        {/* Top Header with Brand Logo & Back Link */}
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <Link to="/" className="text-decoration-none d-flex align-items-center">
+            <img src="/logo.png" alt="PrepPilot AI" style={{ height: "38px", objectFit: "contain" }} />
+          </Link>
           <Link
             to="/dashboard"
             className="text-decoration-none d-inline-flex align-items-center gap-2 text-secondary fw-semibold btn btn-sm btn-white border px-3 py-1.5 rounded-pill shadow-sm"

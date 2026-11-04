@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './landingPage/Navbar';
 import LandingPage from './pages/LandingPage';
@@ -17,6 +17,14 @@ import ResultPage from './pages/ResultPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
+  const location = useLocation();
+
+  // Show public marketing navbar on marketing & auth pages; hide on candidate workspace screens
+  const isWorkspaceRoute =
+    location.pathname.startsWith('/dashboard') ||
+    location.pathname.startsWith('/createinterview') ||
+    location.pathname.startsWith('/interview');
+
   return (
     <>
       <Toaster
@@ -53,7 +61,7 @@ function App() {
           },
         }}
       />
-      <Navbar />
+      {!isWorkspaceRoute && <Navbar />}
       <Routes>
         {/* Public Routes */}
         <Route path='/' element={<LandingPage />} />

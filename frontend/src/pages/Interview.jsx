@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import AudioWaveform from "../components/AudioWaveform";
 import { getQuestions } from "../services/QuestionServices";
@@ -382,6 +382,9 @@ function Interview() {
             {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 pb-2">
                 <div className="d-flex align-items-center gap-2.5">
+                    <Link to="/" className="text-decoration-none d-none d-sm-inline-flex align-items-center me-1">
+                        <img src="/logo-icon.png" alt="PrepPilot AI" style={{ height: "32px", objectFit: "contain" }} />
+                    </Link>
                     <div>
                         <h3 className="fw-bold mb-1" style={{ color: "#0F172A", fontSize: "clamp(1.15rem, 2.5vw, 1.4rem)" }}>
                             🎤 {interviewData?.role ? `${interviewData.role} Mock Interview` : "AI Mock Interview"}

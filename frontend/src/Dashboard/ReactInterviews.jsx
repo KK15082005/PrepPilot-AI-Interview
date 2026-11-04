@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FiEye, FiPlay, FiTrash2, FiPlus, FiClock, FiAward, FiCheckCircle } from "react-icons/fi";
+import { FiEye, FiPlay, FiTrash2, FiPlus, FiClock, FiAward } from "react-icons/fi";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import API from "../services/api";
@@ -83,94 +83,159 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
     const getDifficultyBadge = (difficulty) => {
         switch (difficulty?.toLowerCase()) {
             case "easy":
-                return <span className="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">Easy</span>;
+                return (
+                    <span
+                        className="badge rounded-pill fw-medium"
+                        style={{ background: "#ECFDF5", color: "#059669", border: "1px solid #A7F3D0", fontSize: "11px", padding: "3px 9px" }}
+                    >
+                        Easy
+                    </span>
+                );
             case "medium":
-                return <span className="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 rounded-pill">Medium</span>;
+                return (
+                    <span
+                        className="badge rounded-pill fw-medium"
+                        style={{ background: "#FFFBEB", color: "#D97706", border: "1px solid #FDE68A", fontSize: "11px", padding: "3px 9px" }}
+                    >
+                        Medium
+                    </span>
+                );
             case "hard":
-                return <span className="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">Hard</span>;
+                return (
+                    <span
+                        className="badge rounded-pill fw-medium"
+                        style={{ background: "#FEF2F2", color: "#DC2626", border: "1px solid #FECACA", fontSize: "11px", padding: "3px 9px" }}
+                    >
+                        Hard
+                    </span>
+                );
             default:
-                return <span className="badge bg-light text-dark px-2 py-1 rounded-pill">{difficulty}</span>;
+                return (
+                    <span
+                        className="badge bg-light text-secondary rounded-pill border"
+                        style={{ fontSize: "11px", padding: "3px 9px" }}
+                    >
+                        {difficulty || "General"}
+                    </span>
+                );
         }
     };
 
     const getScoreBadge = (scoreStr) => {
         if (!scoreStr || scoreStr === "-") {
-            return <span className="text-muted fw-medium" style={{ fontSize: "12px" }}>Not Graded</span>;
+            return <span className="text-muted fw-medium" style={{ fontSize: "12px" }}>—</span>;
         }
 
         const num = parseFloat(scoreStr);
         if (isNaN(num)) {
-            return <span className="text-muted">{scoreStr}</span>;
+            return <span className="text-muted" style={{ fontSize: "12px" }}>{scoreStr}</span>;
         }
 
         let bg = "#ECFDF5";
-        let color = "#047857";
+        let color = "#059669";
         let border = "#A7F3D0";
 
         if (num < 5) {
             bg = "#FEF2F2";
-            color = "#B91C1C";
+            color = "#DC2626";
             border = "#FECACA";
         } else if (num < 7) {
             bg = "#FFFBEB";
-            color = "#B45309";
+            color = "#D97706";
             border = "#FDE68A";
         }
 
         return (
             <span
-                className="badge px-2 py-1 rounded-pill fw-bold d-inline-flex align-items-center gap-1"
-                style={{ background: bg, color: color, border: `1px solid ${border}`, fontSize: "12px" }}
+                className="badge rounded-pill fw-semibold d-inline-flex align-items-center gap-1"
+                style={{ background: bg, color: color, border: `1px solid ${border}`, fontSize: "11.5px", padding: "3px 9px" }}
             >
-                <FiAward size={12} /> {num} <small style={{ opacity: 0.8, fontSize: "10px" }}>/ 10</small>
+                <FiAward size={12} /> {num} <small style={{ opacity: 0.8, fontSize: "10px" }}>/10</small>
+            </span>
+        );
+    };
+
+    const getStatusBadge = (status) => {
+        const isCompleted = status === "Completed";
+        const isOngoing = status === "Ongoing";
+
+        if (isCompleted) {
+            return (
+                <span
+                    className="badge rounded-pill fw-medium"
+                    style={{ background: "#ECFDF5", color: "#059669", border: "1px solid #A7F3D0", fontSize: "11px", padding: "3px 9px" }}
+                >
+                    Completed
+                </span>
+            );
+        }
+        if (isOngoing) {
+            return (
+                <span
+                    className="badge rounded-pill fw-medium"
+                    style={{ background: "#E6F8F7", color: "#0F9D9A", border: "1px solid #C4F1ED", fontSize: "11px", padding: "3px 9px" }}
+                >
+                    In Progress
+                </span>
+            );
+        }
+        return (
+            <span
+                className="badge rounded-pill fw-medium"
+                style={{ background: "#F1F5F9", color: "#64748B", border: "1px solid #CBD5E1", fontSize: "11px", padding: "3px 9px" }}
+            >
+                {status || "Pending"}
             </span>
         );
     };
 
     return (
-        <div
-            className="card shadow-sm border-0 mt-3 mt-md-4 overflow-hidden"
-            style={{ borderRadius: "20px", background: "#FFFFFF", border: "1px solid #E2E8F0" }}
+        <section
+            className="card shadow-sm border-0 overflow-hidden mb-4"
+            style={{ borderRadius: "16px", background: "#FFFFFF", border: "1px solid #E2E8F0" }}
+            aria-label="Recent Interview Sessions"
         >
             <div className="card-body p-3 p-md-4">
                 {/* Header Title & New Session Button */}
                 <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                     <div>
-                        <h4 className="mb-0 fw-bold" style={{ color: "#0F172A", fontSize: "clamp(1.1rem, 2vw, 1.25rem)" }}>
+                        <h3 className="mb-0 fw-bold" style={{ color: "#0F172A", fontSize: "clamp(1.05rem, 1.8vw, 1.2rem)", letterSpacing: "-0.01em" }}>
                             Interview Sessions
-                        </h4>
-                        <small className="text-secondary d-none d-sm-block mt-0.5">
-                            Track your past mock sessions, review AI evaluations, or practice again.
+                        </h3>
+                        <small className="text-secondary d-none d-sm-block mt-0.5" style={{ fontSize: "12px" }}>
+                            Review past mock evaluations, weaknesses, and model answers.
                         </small>
                     </div>
 
                     <Link to="/createinterview" className="text-decoration-none">
                         <button
-                            className="btn btn-sm px-3 py-2 fw-semibold text-white d-inline-flex align-items-center gap-1.5 shadow-sm"
+                            type="button"
+                            className="btn btn-sm px-3 py-1.5 fw-semibold text-white d-inline-flex align-items-center gap-1.5 shadow-sm hover-lift"
                             style={{
-                                background: "linear-gradient(135deg, #0F9D9A, #3CC8C3)",
-                                borderRadius: "10px",
+                                background: "linear-gradient(135deg, #0F9D9A, #14B8A6)",
+                                borderRadius: "8px",
                                 border: "none",
-                                fontSize: "13px"
+                                fontSize: "12.5px"
                             }}
                         >
-                            <FiPlus size={15} /> <span>New Session</span>
+                            <FiPlus size={14} /> <span>New Session</span>
                         </button>
                     </Link>
                 </div>
 
-                {/* Filter Tabs (Horizontal scroll on mobile to avoid vertical stacking) */}
+                {/* Filter Tabs */}
                 <div
-                    className="d-flex align-items-center gap-2 border-bottom pb-3 mb-3 overflow-x-auto flex-nowrap"
+                    className="d-flex align-items-center gap-1.5 border-bottom pb-2.5 mb-3 overflow-x-auto flex-nowrap"
                     style={{ WebkitOverflowScrolling: "touch" }}
                 >
                     <button
-                        className={`btn btn-sm px-3 py-1.5 rounded-pill fw-semibold text-nowrap flex-shrink-0 ${
+                        type="button"
+                        className={`btn btn-sm px-3 py-1 rounded-pill fw-medium text-nowrap flex-shrink-0 ${
                             activeTab === "all" ? "text-white" : "text-secondary btn-light border"
                         }`}
                         style={{
                             background: activeTab === "all" ? "#0F9D9A" : "#F8FAFC",
-                            border: activeTab === "all" ? "none" : "1px solid #E2E8F0",
+                            borderColor: activeTab === "all" ? "#0F9D9A" : "#E2E8F0",
                             fontSize: "12px"
                         }}
                         onClick={() => setActiveTab("all")}
@@ -179,12 +244,13 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                     </button>
 
                     <button
-                        className={`btn btn-sm px-3 py-1.5 rounded-pill fw-semibold text-nowrap flex-shrink-0 ${
+                        type="button"
+                        className={`btn btn-sm px-3 py-1 rounded-pill fw-medium text-nowrap flex-shrink-0 ${
                             activeTab === "completed" ? "text-white" : "text-secondary btn-light border"
                         }`}
                         style={{
                             background: activeTab === "completed" ? "#0F9D9A" : "#F8FAFC",
-                            border: activeTab === "completed" ? "none" : "1px solid #E2E8F0",
+                            borderColor: activeTab === "completed" ? "#0F9D9A" : "#E2E8F0",
                             fontSize: "12px"
                         }}
                         onClick={() => setActiveTab("completed")}
@@ -193,12 +259,13 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                     </button>
 
                     <button
-                        className={`btn btn-sm px-3 py-1.5 rounded-pill fw-semibold text-nowrap flex-shrink-0 ${
+                        type="button"
+                        className={`btn btn-sm px-3 py-1 rounded-pill fw-medium text-nowrap flex-shrink-0 ${
                             activeTab === "ongoing" ? "text-white" : "text-secondary btn-light border"
                         }`}
                         style={{
                             background: activeTab === "ongoing" ? "#0F9D9A" : "#F8FAFC",
-                            border: activeTab === "ongoing" ? "none" : "1px solid #E2E8F0",
+                            borderColor: activeTab === "ongoing" ? "#0F9D9A" : "#E2E8F0",
                             fontSize: "12px"
                         }}
                         onClick={() => setActiveTab("ongoing")}
@@ -210,47 +277,50 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                 {/* Loading State */}
                 {loading ? (
                     <div className="text-center py-5">
-                        <div className="spinner-border text-info" role="status"></div>
-                        <p className="mt-2 text-secondary" style={{ fontSize: "14px" }}>Loading mock interviews...</p>
+                        <div className="spinner-border spinner-border-sm text-info" role="status"></div>
+                        <p className="mt-2 text-secondary mb-0" style={{ fontSize: "13px" }}>Loading mock interviews...</p>
                     </div>
                 ) : filteredInterviews.length === 0 ? (
-                    /* Empty State */
-                    <div className="text-center py-5 my-2">
+                    /* Clean Empty State */
+                    <div className="text-center py-5 my-1">
                         <div
                             style={{
-                                width: "60px",
-                                height: "60px",
+                                width: "48px",
+                                height: "48px",
                                 background: "#E6F8F7",
                                 borderRadius: "50%",
                                 display: "inline-flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 color: "#0F9D9A",
-                                fontSize: "26px"
+                                fontSize: "20px"
                             }}
                         >
                             🎤
                         </div>
-                        <h5 className="mt-3 fw-bold" style={{ color: "#0F172A", fontSize: "16px" }}>
+                        <h4 className="mt-2.5 fw-bold" style={{ color: "#0F172A", fontSize: "15px" }}>
                             {searchQuery ? "No matching interviews found" : "No mock interviews yet"}
-                        </h5>
-                        <p className="text-secondary mb-3" style={{ maxWidth: "400px", margin: "0 auto", fontSize: "13px" }}>
+                        </h4>
+                        <p className="text-secondary mb-3" style={{ maxWidth: "380px", margin: "0 auto", fontSize: "12.5px" }}>
                             {searchQuery
-                                ? `No interviews match "${searchQuery}". Check spelling or try a broader term.`
-                                : "Start practicing technical and HR questions tailored specifically to your target role."}
+                                ? `No interview matches "${searchQuery}". Try a different role keyword.`
+                                : "Start practicing role-tailored technical and HR questions to see performance feedback."}
                         </p>
                         {searchQuery ? (
                             <button
-                                className="btn btn-outline-secondary btn-sm px-3 py-2 rounded-pill"
+                                type="button"
+                                className="btn btn-outline-secondary btn-sm px-3 py-1.5 rounded-pill"
                                 onClick={() => setActiveTab("all")}
+                                style={{ fontSize: "12px" }}
                             >
-                                Reset Filters
+                                Reset Search
                             </button>
                         ) : (
                             <Link to="/createinterview">
                                 <button
-                                    className="btn px-4 py-2 text-white fw-semibold shadow-sm"
-                                    style={{ background: "#0F9D9A", borderRadius: "10px", border: "none", fontSize: "14px" }}
+                                    type="button"
+                                    className="btn px-3.5 py-1.5 text-white fw-semibold shadow-sm"
+                                    style={{ background: "#0F9D9A", borderRadius: "8px", border: "none", fontSize: "13px" }}
                                 >
                                     Create Your First Interview
                                 </button>
@@ -260,106 +330,118 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                 ) : (
                     <>
                         {/* Desktop Table View (>= 768px) */}
-                        <div className="table-responsive d-none d-md-block">
-                            <table className="table align-middle table-hover mb-0">
+                        <div className="table-responsive d-none d-md-block" style={{ overflowX: "auto" }}>
+                            <table
+                                className="table align-middle table-hover mb-0"
+                                style={{
+                                    borderCollapse: "separate",
+                                    borderSpacing: "0",
+                                    width: "100%",
+                                    minWidth: "860px"
+                                }}
+                            >
                                 <thead>
-                                    <tr className="text-secondary" style={{ fontSize: "12px", borderBottom: "2px solid #F1F5F9", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                                        <th>Target Role / Title</th>
-                                        <th>Round Type</th>
-                                        <th>Difficulty</th>
-                                        <th>Duration</th>
-                                        <th>AI Score</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th className="text-end">Actions</th>
+                                    <tr
+                                        style={{
+                                            fontSize: "11px",
+                                            color: "#64748B",
+                                            textTransform: "uppercase",
+                                            letterSpacing: "0.5px",
+                                            borderBottom: "1px solid #E2E8F0"
+                                        }}
+                                    >
+                                        <th className="py-2.5 ps-2" style={{ minWidth: "180px" }}>Role / Title</th>
+                                        <th className="py-2.5" style={{ width: "115px", whiteSpace: "nowrap" }}>Round Type</th>
+                                        <th className="py-2.5" style={{ width: "95px", whiteSpace: "nowrap" }}>Difficulty</th>
+                                        <th className="py-2.5" style={{ width: "85px", whiteSpace: "nowrap" }}>Duration</th>
+                                        <th className="py-2.5" style={{ width: "105px", whiteSpace: "nowrap" }}>AI Score</th>
+                                        <th className="py-2.5" style={{ width: "115px", whiteSpace: "nowrap" }}>Date</th>
+                                        <th className="py-2.5" style={{ width: "105px", whiteSpace: "nowrap" }}>Status</th>
+                                        <th className="py-2.5 text-end pe-2" style={{ width: "145px", minWidth: "145px", whiteSpace: "nowrap" }}>Action</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     {filteredInterviews.map((item) => {
                                         const isCompleted = item.status === "Completed";
-                                        const isOngoing = item.status === "Ongoing";
 
                                         return (
-                                            <tr key={item._id} style={{ fontSize: "14px" }}>
-                                                <td>
-                                                    <div className="fw-bold" style={{ color: "#0F172A" }}>
+                                            <tr key={item._id} style={{ fontSize: "13px", transition: "background 0.15s ease" }}>
+                                                <td className="py-2.5 ps-2">
+                                                    <div className="fw-semibold text-truncate" style={{ color: "#0F172A", maxWidth: "260px" }} title={item.role}>
                                                         {item.role || "Developer"}
                                                     </div>
-                                                    <small className="text-muted d-block" style={{ fontSize: "12px" }}>
+                                                    <small className="text-muted d-block text-truncate" style={{ fontSize: "11px", maxWidth: "260px" }} title={item.title}>
                                                         {item.title || "Mock Session"} • {item.experienceLevel || "Fresher"}
                                                     </small>
                                                 </td>
 
-                                                <td>
-                                                    <span className="badge bg-light text-dark border px-2 py-1 rounded-pill" style={{ fontSize: "12px" }}>
+                                                <td className="py-2.5" style={{ whiteSpace: "nowrap" }}>
+                                                    <span className="badge bg-light text-secondary border px-2 py-1 rounded-pill" style={{ fontSize: "11px", fontWeight: "500" }}>
                                                         {item.interviewType || "Technical"}
                                                     </span>
                                                 </td>
 
-                                                <td>{getDifficultyBadge(item.difficulty)}</td>
+                                                <td className="py-2.5" style={{ whiteSpace: "nowrap" }}>
+                                                    {getDifficultyBadge(item.difficulty)}
+                                                </td>
 
-                                                <td>
-                                                    <span className="text-secondary d-inline-flex align-items-center gap-1" style={{ fontSize: "13px" }}>
-                                                        <FiClock size={12} /> {item.duration || 15}m
+                                                <td className="py-2.5" style={{ whiteSpace: "nowrap" }}>
+                                                    <span className="text-secondary d-inline-flex align-items-center gap-1" style={{ fontSize: "12px" }}>
+                                                        <FiClock size={11} className="text-muted" /> {item.duration || 15}m
                                                     </span>
                                                 </td>
 
-                                                <td>{getScoreBadge(item.score)}</td>
+                                                <td className="py-2.5" style={{ whiteSpace: "nowrap" }}>
+                                                    {getScoreBadge(item.score)}
+                                                </td>
 
-                                                <td>
-                                                    <span className="text-muted" style={{ fontSize: "13px" }}>
+                                                <td className="py-2.5" style={{ whiteSpace: "nowrap" }}>
+                                                    <span className="text-muted" style={{ fontSize: "12px", whiteSpace: "nowrap" }}>
                                                         {formatDate(item.createdAt)}
                                                     </span>
                                                 </td>
 
-                                                <td>
-                                                    <span
-                                                        className={`badge rounded-pill ${
-                                                            isCompleted
-                                                                ? "bg-success"
-                                                                : isOngoing
-                                                                ? "bg-info text-dark"
-                                                                : "bg-warning text-dark"
-                                                        }`}
-                                                        style={{ fontSize: "11px" }}
-                                                    >
-                                                        {item.status || "Pending"}
-                                                    </span>
+                                                <td className="py-2.5" style={{ whiteSpace: "nowrap" }}>
+                                                    {getStatusBadge(item.status)}
                                                 </td>
 
-                                                <td className="text-end">
-                                                    <div className="d-flex justify-content-end gap-2">
+                                                <td className="py-2.5 text-end pe-2" style={{ whiteSpace: "nowrap" }}>
+                                                    <div className="d-flex justify-content-end align-items-center gap-1.5 flex-nowrap">
                                                         {isCompleted ? (
                                                             <button
-                                                                className="btn btn-sm btn-outline-primary d-flex align-items-center gap-1 px-3 py-1 rounded-pill"
+                                                                type="button"
+                                                                className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill fw-medium"
                                                                 onClick={() => navigate(`/interview/${item._id}/result`)}
                                                                 title="View Evaluation Results"
-                                                                style={{ fontSize: "12px" }}
+                                                                style={{ fontSize: "11.5px", height: "30px", whiteSpace: "nowrap" }}
                                                             >
-                                                                <FiEye size={13} /> Result
+                                                                <FiEye size={12} /> View Result
                                                             </button>
                                                         ) : (
                                                             <button
-                                                                className="btn btn-sm text-white d-flex align-items-center gap-1 px-3 py-1 rounded-pill"
+                                                                type="button"
+                                                                className="btn btn-sm text-white d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill fw-medium shadow-sm"
                                                                 onClick={() => navigate(`/interview/${item._id}`)}
                                                                 title="Continue Interview"
-                                                                style={{ background: "#0F9D9A", border: "none", fontSize: "12px" }}
+                                                                style={{ background: "#0F9D9A", border: "none", fontSize: "11.5px", height: "30px", whiteSpace: "nowrap" }}
                                                             >
-                                                                <FiPlay size={13} /> Practice
+                                                                <FiPlay size={12} /> Practice
                                                             </button>
                                                         )}
 
                                                         <button
-                                                            className="btn btn-sm btn-outline-danger p-2 rounded-circle"
+                                                            type="button"
+                                                            className="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center p-1 rounded-circle flex-shrink-0"
                                                             onClick={(e) => handleDelete(item._id, e)}
                                                             disabled={deletingId === item._id}
                                                             title="Delete Interview"
+                                                            style={{ width: "30px", height: "30px" }}
                                                         >
                                                             {deletingId === item._id ? (
-                                                                <span className="spinner-border spinner-border-sm" role="status"></span>
+                                                                <span className="spinner-border spinner-border-sm" role="status" style={{ width: "11px", height: "11px" }}></span>
                                                             ) : (
-                                                                <FiTrash2 size={13} />
+                                                                <FiTrash2 size={12} />
                                                             )}
                                                         </button>
                                                     </div>
@@ -372,87 +454,75 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                         </div>
 
                         {/* Mobile Responsive Card List View (< 768px) */}
-                        <div className="d-md-none d-flex flex-column gap-3">
+                        <div className="d-md-none d-flex flex-column gap-2.5">
                             {filteredInterviews.map((item) => {
                                 const isCompleted = item.status === "Completed";
-                                const isOngoing = item.status === "Ongoing";
 
                                 return (
                                     <div
                                         key={item._id}
-                                        className="card border p-3 rounded-4 shadow-sm"
+                                        className="card border p-3 rounded-3 shadow-sm"
                                         style={{ background: "#FFFFFF", borderColor: "#E2E8F0" }}
                                     >
-                                        {/* Card Header: Role & Status */}
                                         <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
                                             <div style={{ minWidth: 0 }}>
-                                                <h6 className="fw-bold mb-0 text-truncate" style={{ color: "#0F172A", fontSize: "15px" }}>
+                                                <h5 className="fw-bold mb-0 text-truncate" style={{ color: "#0F172A", fontSize: "14px" }}>
                                                     {item.role || "Developer"}
-                                                </h6>
-                                                <small className="text-muted d-block text-truncate mt-0.5" style={{ fontSize: "12px" }}>
+                                                </h5>
+                                                <small className="text-muted d-block text-truncate mt-0.5" style={{ fontSize: "11.5px" }}>
                                                     {item.title || "Mock Session"} • {formatDate(item.createdAt)}
                                                 </small>
                                             </div>
 
-                                            <span
-                                                className={`badge rounded-pill flex-shrink-0 ${
-                                                    isCompleted
-                                                        ? "bg-success"
-                                                        : isOngoing
-                                                        ? "bg-info text-dark"
-                                                        : "bg-warning text-dark"
-                                                }`}
-                                                style={{ fontSize: "11px" }}
-                                            >
-                                                {item.status || "Pending"}
-                                            </span>
+                                            {getStatusBadge(item.status)}
                                         </div>
 
-                                        {/* Metadata Row: Badges */}
-                                        <div className="d-flex align-items-center gap-1.5 flex-wrap my-2">
-                                            <span className="badge bg-light text-dark border px-2 py-1 rounded-pill" style={{ fontSize: "11px" }}>
+                                        <div className="d-flex align-items-center gap-1.5 flex-wrap my-1.5">
+                                            <span className="badge bg-light text-secondary border px-2 py-0.5 rounded-pill" style={{ fontSize: "10.5px" }}>
                                                 {item.interviewType || "Technical"}
                                             </span>
                                             {getDifficultyBadge(item.difficulty)}
-                                            <span className="badge bg-light text-secondary border px-2 py-1 rounded-pill" style={{ fontSize: "11px" }}>
-                                                <FiClock size={11} className="me-1" />{item.duration || 15}m
+                                            <span className="badge bg-light text-secondary border px-2 py-0.5 rounded-pill" style={{ fontSize: "10.5px" }}>
+                                                <FiClock size={10} className="me-1" />{item.duration || 15}m
                                             </span>
                                             <div className="ms-auto">
                                                 {getScoreBadge(item.score)}
                                             </div>
                                         </div>
 
-                                        {/* Action Buttons: 44px min touch target */}
-                                        <div className="d-flex align-items-center gap-2 mt-3 pt-2 border-top">
+                                        <div className="d-flex align-items-center gap-2 mt-2 pt-2 border-top">
                                             {isCompleted ? (
                                                 <button
+                                                    type="button"
                                                     className="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center gap-1.5 flex-grow-1 fw-semibold"
                                                     onClick={() => navigate(`/interview/${item._id}/result`)}
-                                                    style={{ height: "42px", borderRadius: "10px", fontSize: "13px" }}
+                                                    style={{ height: "38px", borderRadius: "8px", fontSize: "12.5px" }}
                                                 >
-                                                    <FiEye size={15} /> View AI Report
+                                                    <FiEye size={14} /> View AI Report
                                                 </button>
                                             ) : (
                                                 <button
+                                                    type="button"
                                                     className="btn btn-sm text-white d-flex align-items-center justify-content-center gap-1.5 flex-grow-1 fw-semibold shadow-sm"
                                                     onClick={() => navigate(`/interview/${item._id}`)}
-                                                    style={{ background: "#0F9D9A", border: "none", height: "42px", borderRadius: "10px", fontSize: "13px" }}
+                                                    style={{ background: "#0F9D9A", border: "none", height: "38px", borderRadius: "8px", fontSize: "12.5px" }}
                                                 >
-                                                    <FiPlay size={15} /> Resume Practice
+                                                    <FiPlay size={14} /> Practice
                                                 </button>
                                             )}
 
                                             <button
+                                                type="button"
                                                 className="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center flex-shrink-0"
                                                 onClick={(e) => handleDelete(item._id, e)}
                                                 disabled={deletingId === item._id}
                                                 title="Delete Interview"
-                                                style={{ width: "42px", height: "42px", borderRadius: "10px" }}
+                                                style={{ width: "38px", height: "38px", borderRadius: "8px" }}
                                             >
                                                 {deletingId === item._id ? (
                                                     <span className="spinner-border spinner-border-sm" role="status"></span>
                                                 ) : (
-                                                    <FiTrash2 size={16} />
+                                                    <FiTrash2 size={15} />
                                                 )}
                                             </button>
                                         </div>
@@ -463,7 +533,7 @@ function RecentInterviews({ searchQuery = "", onDataChanged }) {
                     </>
                 )}
             </div>
-        </div>
+        </section>
     );
 }
 

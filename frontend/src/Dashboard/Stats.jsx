@@ -41,123 +41,113 @@ function Stats({ refreshTrigger }) {
         {
             title: "Total Mocks",
             value: loading ? "--" : String(stats.totalInterviews),
-            subtitle: `${stats.completedInterviews || 0} completed`,
-            pill: "All Sessions",
-            icon: <FiMic size={18} />,
+            subtitle: `${stats.completedInterviews || 0} completed sessions`,
+            icon: <FiMic size={16} />,
             color: "#0F9D9A",
-            bg: "#E6F8F7",
-            border: "#C4F1ED"
+            bg: "rgba(15, 157, 154, 0.08)",
+            border: "rgba(15, 157, 154, 0.2)"
         },
         {
             title: "Average Score",
             value: loading ? "--" : stats.averageScore === "-" ? "N/A" : `${stats.averageScore}`,
             unit: stats.averageScore !== "-" && stats.averageScore !== "N/A" ? "/10" : "",
-            subtitle: "AI evaluated depth",
-            pill: "Gemini AI",
-            icon: <FiAward size={18} />,
+            subtitle: "Rubric depth benchmark",
+            icon: <FiAward size={16} />,
             color: "#10B981",
-            bg: "#ECFDF5",
-            border: "#A7F3D0"
+            bg: "rgba(16, 185, 129, 0.08)",
+            border: "rgba(16, 185, 129, 0.2)"
         },
         {
-            title: "Practiced",
+            title: "Practiced Hours",
             value: loading ? "--" : stats.hoursPracticed,
-            subtitle: "Voice & speech audio",
-            pill: "Voice Input",
-            icon: <FiClock size={18} />,
-            color: "#F59E0B",
-            bg: "#FFFBEB",
-            border: "#FDE68A"
+            subtitle: "Total speech audio time",
+            icon: <FiClock size={16} />,
+            color: "#D97706",
+            bg: "rgba(245, 158, 11, 0.08)",
+            border: "rgba(245, 158, 11, 0.2)"
         },
         {
-            title: "Completion",
+            title: "Completion Rate",
             value: loading ? "--" : stats.successRate,
-            subtitle: "Finished vs created",
-            pill: "Goal: 80%+",
-            icon: <FiTrendingUp size={18} />,
-            color: "#8B5CF6",
-            bg: "#F5F3FF",
-            border: "#DDD6FE"
+            subtitle: "Finished vs initiated",
+            icon: <FiTrendingUp size={16} />,
+            color: "#6366F1",
+            bg: "rgba(99, 102, 241, 0.08)",
+            border: "rgba(99, 102, 241, 0.2)"
         },
     ];
 
     return (
-        <div className="row mt-3 mt-md-4 g-2 g-sm-3 g-md-4">
-            {statItems.map((item, index) => (
-                <div className="col-6 col-lg-3" key={index}>
-                    <div
-                        className="card border-0 shadow-sm p-3 h-100 position-relative overflow-hidden"
-                        style={{
-                            borderRadius: "16px",
-                            background: "#FFFFFF",
-                            border: "1px solid #E2E8F0",
-                            transition: "transform 0.2s ease, box-shadow 0.2s ease",
-                        }}
-                    >
-                        <div className="d-flex justify-content-between align-items-center mb-1">
-                            <span
-                                className="text-secondary fw-semibold text-truncate"
-                                style={{ fontSize: "12px" }}
-                            >
-                                {item.title}
-                            </span>
-
-                            <div
-                                style={{
-                                    background: item.bg,
-                                    border: `1px solid ${item.border}`,
-                                    width: "32px",
-                                    height: "32px",
-                                    borderRadius: "8px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    color: item.color,
-                                    flexShrink: 0
-                                }}
-                            >
-                                {item.icon}
-                            </div>
-                        </div>
-
-                        <div className="d-flex align-items-baseline gap-1 my-1">
-                            <h3
-                                className="mb-0 fw-bold"
-                                style={{
-                                    color: "#0F172A",
-                                    fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)",
-                                    letterSpacing: "-0.02em"
-                                }}
-                            >
-                                {item.value}
-                            </h3>
-                            {item.unit && (
-                                <span className="text-muted fw-semibold" style={{ fontSize: "12px" }}>
-                                    {item.unit}
+        <section className="mb-4" aria-label="Candidate Performance Metrics">
+            <div className="row g-2 g-sm-3 g-md-3">
+                {statItems.map((item, index) => (
+                    <div className="col-6 col-lg-3" key={index}>
+                        <div
+                            className="card border-0 shadow-sm h-100 position-relative"
+                            style={{
+                                borderRadius: "14px",
+                                background: "#FFFFFF",
+                                border: "1px solid #E2E8F0",
+                                padding: "16px 18px",
+                                transition: "all 0.18s ease",
+                            }}
+                        >
+                            {/* Card Top: Label & Restrained Accent Icon */}
+                            <div className="d-flex justify-content-between align-items-center mb-1">
+                                <span
+                                    className="fw-semibold text-truncate"
+                                    style={{ fontSize: "12px", color: "#64748B", letterSpacing: "0.2px" }}
+                                >
+                                    {item.title}
                                 </span>
-                            )}
-                        </div>
 
-                        <div className="d-flex justify-content-between align-items-center mt-1">
-                            <small className="text-muted text-truncate" style={{ fontSize: "11px" }}>
+                                <div
+                                    style={{
+                                        background: item.bg,
+                                        border: `1px solid ${item.border}`,
+                                        width: "32px",
+                                        height: "32px",
+                                        borderRadius: "8px",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        color: item.color,
+                                        flexShrink: 0
+                                    }}
+                                >
+                                    {item.icon}
+                                </div>
+                            </div>
+
+                            {/* Card Value: Crisp Typography */}
+                            <div className="d-flex align-items-baseline gap-1 my-1">
+                                <h3
+                                    className="mb-0 fw-bold"
+                                    style={{
+                                        color: "#0F172A",
+                                        fontSize: "clamp(1.35rem, 2.3vw, 1.7rem)",
+                                        letterSpacing: "-0.03em",
+                                        lineHeight: "1.2"
+                                    }}
+                                >
+                                    {item.value}
+                                </h3>
+                                {item.unit && (
+                                    <span style={{ fontSize: "12px", color: "#94A3B8", fontWeight: "600" }}>
+                                        {item.unit}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Card Bottom: Context Subtitle */}
+                            <p className="mb-0 text-truncate" style={{ fontSize: "11.5px", color: "#94A3B8" }}>
                                 {item.subtitle}
-                            </small>
-                            <span
-                                className="badge d-none d-xl-inline-block px-1.5 py-0.5 rounded-pill"
-                                style={{
-                                    background: item.bg,
-                                    color: item.color,
-                                    fontSize: "9px",
-                                    fontWeight: "600"
-                                }}
-                            >
-                                {item.pill}
-                            </span>
+                            </p>
                         </div>
                     </div>
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+        </section>
     );
 }
 
