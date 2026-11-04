@@ -197,36 +197,118 @@ button, button:hover, button:focus, button * {
   text-decoration: none !important;
 }
 
-/* Responsive Mobile Sidebar Offcanvas */
+/* ==========================================================================
+   Candidate Dashboard - Seamless Collapsible Sidebar
+   ========================================================================== */
+
+/* Mobile (< 992px) */
 @media (max-width: 991.98px) {
-  .sidebar-mobile-closed {
+  .sidebar-root {
     position: fixed !important;
-    top: 0;
-    left: 0;
-    transform: translateX(-100%);
-    box-shadow: none;
-    visibility: hidden;
-    pointer-events: none;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 270px !important;
+    max-width: 85vw !important;
+    z-index: 1050 !important;
+    background: #FFFFFF !important;
+    border-right: 1px solid #E2E8F0 !important;
+    box-shadow: 0 0 50px rgba(15, 23, 42, 0.25) !important;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.28s ease !important;
+    overflow-y: auto !important;
   }
-  .sidebar-mobile-open {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    transform: translateX(0);
-    box-shadow: 0 0 50px rgba(15, 23, 42, 0.25);
-    visibility: visible;
-    pointer-events: auto;
+  .sidebar-root.sidebar-open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+  .sidebar-root.sidebar-collapsed {
+    transform: translateX(-100%) !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
   }
 }
 
+/* Desktop (>= 992px) */
 @media (min-width: 992px) {
-  .sidebar-mobile-closed, .sidebar-mobile-open {
-    transform: none !important;
+  .sidebar-root {
     position: sticky !important;
-    top: 66px !important;
-    height: calc(100vh - 66px) !important;
-    max-height: calc(100vh - 66px) !important;
+    top: 0 !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    background: #FFFFFF !important;
+    border-right: 1px solid #E2E8F0 !important;
+    z-index: 1025 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
+  .sidebar-root.sidebar-open {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+  }
+  .sidebar-root.sidebar-collapsed {
+    width: 72px !important;
+    min-width: 72px !important;
+    max-width: 72px !important;
+  }
+}
+
+/* Sidebar Nav Item Interactions */
+.sidebar-nav-item {
+  user-select: none;
+}
+.sidebar-nav-item:hover {
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+.sidebar-nav-item:hover svg {
+  color: #0F9D9A !important;
+}
+
+/* Sidebar Toggle Chevron Button */
+.sidebar-toggle-btn {
+  transition: all 0.15s ease !important;
+}
+.sidebar-toggle-btn:hover {
+  background: #E6F8F7 !important;
+  border-color: #0F9D9A !important;
+  color: #0F9D9A !important;
+}
+
+/* Sidebar Logout Button */
+.sidebar-logout-btn {
+  transition: all 0.15s ease !important;
+}
+.sidebar-logout-btn:hover {
+  background: #FEF2F2 !important;
+  color: #DC2626 !important;
+  border-color: #FECACA !important;
+  transform: translateY(-1px);
+}
+
+/* Sleek Sidebar Custom Scrollbar */
+.sidebar-scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 157, 154, 0.2) transparent;
+}
+.sidebar-scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(15, 157, 154, 0.2);
+  border-radius: 4px;
+}
+.sidebar-scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 157, 154, 0.4);
 }
 
 /* Hover Items */
