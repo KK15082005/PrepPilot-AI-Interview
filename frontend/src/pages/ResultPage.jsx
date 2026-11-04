@@ -204,17 +204,12 @@ function ResultPage() {
 
                 {/* Top Navigation */}
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 no-print">
-                    <div className="d-flex align-items-center gap-3">
-                        <Link to="/" className="text-decoration-none d-flex align-items-center">
-                            <img src="/logo.png" alt="PrepPilot AI" style={{ height: "36px", objectFit: "contain" }} />
-                        </Link>
-                        <button
-                            className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
-                            onClick={() => navigate("/dashboard")}
-                        >
-                            <FiArrowLeft /> Back to Dashboard
-                        </button>
-                    </div>
+                    <button
+                        className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
+                        onClick={() => navigate("/dashboard")}
+                    >
+                        <FiArrowLeft /> Back to Dashboard
+                    </button>
 
                     <div className="d-flex gap-2 flex-wrap">
                         <button

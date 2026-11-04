@@ -15,7 +15,7 @@ function DashboardPage() {
     };
 
     return (
-        <div className="d-flex" style={{ minHeight: "100vh", background: "#F8FAFC" }}>
+        <div className="d-flex" style={{ minHeight: "calc(100vh - 66px)", background: "#F8FAFC" }}>
             {/* Sidebar (Responsive off-canvas on mobile, fixed left navigation on desktop) */}
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 

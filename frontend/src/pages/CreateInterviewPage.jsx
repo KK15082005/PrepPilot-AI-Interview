@@ -92,21 +92,18 @@ function CreateInterview() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "calc(100vh - 66px)",
         background: "linear-gradient(135deg, #F8FAFC 0%, #EEF8F8 55%, #FCFEFE 100%)",
         padding: "clamp(20px, 4vw, 40px) 16px 60px",
       }}
     >
       <div className="container" style={{ maxWidth: "840px" }}>
-        {/* Top Header with Brand Logo & Back Link */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <Link to="/" className="text-decoration-none d-flex align-items-center">
-            <img src="/logo.png" alt="PrepPilot AI" style={{ height: "38px", objectFit: "contain" }} />
-          </Link>
+        {/* Subheader Navigation */}
+        <div className="d-flex justify-content-start align-items-center mb-3">
           <Link
             to="/dashboard"
-            className="text-decoration-none d-inline-flex align-items-center gap-2 text-secondary fw-semibold"
-            style={{ fontSize: "14px" }}
+            className="text-decoration-none d-inline-flex align-items-center gap-2 text-secondary fw-semibold btn btn-sm btn-white border px-3 py-1.5 rounded-pill shadow-sm"
+            style={{ fontSize: "13px", background: "#FFFFFF" }}
           >
             <FiArrowLeft /> Back to Dashboard
           </Link>
