@@ -1,12 +1,48 @@
-
-.trusted-img{
-    width: 50px;
-    height: 50px;
+.trusted-img {
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid white;
-    box-shadow: 0 8px 20px rgb(105, 213, 233);
+    box-shadow: 0 4px 14px rgba(15, 157, 154, 0.25);
 }
-.overlap{
-    margin-left: -18px;
+
+.overlap {
+    margin-left: -14px;
+}
+
+a, a:hover, a:focus, a:active,
+a *, button, button * {
+    text-decoration: none !important;
+}
+
+.btn-hero-primary {
+    background: linear-gradient(135deg, #0F9D9A 0%, #27B3AE 50%, #3CC8C3 100%) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    text-decoration: none !important;
+}
+
+.btn-hero-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 157, 154, 0.35) !important;
+    color: #FFFFFF !important;
+    text-decoration: none !important;
+}
+
+.btn-hero-secondary {
+    background: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    color: #1E293B !important;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+    text-decoration: none !important;
+}
+
+.btn-hero-secondary:hover {
+    transform: translateY(-2px);
+    border-color: #0F9D9A !important;
+    color: #0F9D9A !important;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08) !important;
+    text-decoration: none !important;
 }

@@ -105,23 +105,18 @@ function Navbar() {
               </Link>
             ) : (
               <div className="d-flex align-items-center gap-2 w-100 w-lg-auto">
-                <Link to="/login" className="flex-grow-1 flex-lg-grow-0" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/login" className="flex-grow-1 flex-lg-grow-0" style={{ textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>
                   <button
-                    className="btn w-100 px-3 py-2 fw-semibold"
-                    style={{ color: "#0F172A", fontSize: "14px", borderRadius: "10px" }}
+                    className="btn btn-nav-login w-100 px-3 py-2"
+                    style={{ fontSize: "14px" }}
                   >
-                    Sign In
+                    Login
                   </button>
                 </Link>
-                <Link to="/signup" className="flex-grow-1 flex-lg-grow-0" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/signup" className="flex-grow-1 flex-lg-grow-0" style={{ textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>
                   <button
-                    className="btn w-100 px-3 py-2 fw-semibold text-white shadow-sm"
-                    style={{
-                      background: "linear-gradient(135deg, #0F9D9A, #3CC8C3)",
-                      borderRadius: "10px",
-                      border: "none",
-                      fontSize: "14px",
-                    }}
+                    className="btn btn-nav-signup w-100 px-3.5 py-2"
+                    style={{ fontSize: "14px" }}
                   >
                     Get Started Free
                   </button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowRight, FiPlayCircle, FiCheckCircle } from 'react-icons/fi';
-import "./hero.css";
+import "./Hero.css";
 
 function Hero() {
     const token = localStorage.getItem("token");
@@ -46,28 +46,27 @@ function Hero() {
                     </p>
 
                     <div className='d-flex gap-2 gap-sm-3 justify-content-center justify-content-lg-start flex-wrap'>
-                        <Link to={token ? "/createinterview" : "/signup"} className="text-decoration-none">
+                        <Link to={token ? "/createinterview" : "/signup"} style={{ textDecoration: "none" }}>
                             <button
                                 type="button"
-                                className="btn text-white shadow-sm fw-semibold px-4 py-3 d-inline-flex align-items-center gap-2"
+                                className="btn btn-hero-primary shadow-sm fw-semibold px-4 py-3 d-inline-flex align-items-center gap-2"
                                 style={{
-                                    background: "linear-gradient(135deg, #0F9D9A 0%, #3CC8C3 100%)",
-                                    border: "none",
                                     borderRadius: "12px",
-                                    fontSize: "15px"
+                                    fontSize: "15px",
+                                    textDecoration: "none"
                                 }}
                             >
                                 <span>Start Free Interview</span> <FiArrowRight size={17} />
                             </button>
                         </Link>
-                        <Link to="/workflow" className="text-decoration-none">
+                        <Link to="/workflow" style={{ textDecoration: "none" }}>
                             <button
                                 type="button"
-                                className="btn btn-outline-secondary fw-semibold px-4 py-3 d-inline-flex align-items-center gap-2"
+                                className="btn btn-hero-secondary fw-semibold px-4 py-3 d-inline-flex align-items-center gap-2"
                                 style={{
                                     borderRadius: "12px",
                                     fontSize: "15px",
-                                    borderColor: "#CBD5E1"
+                                    textDecoration: "none"
                                 }}
                             >
                                 <FiPlayCircle size={17} style={{ color: "#0F9D9A" }} />

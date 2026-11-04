@@ -44,7 +44,7 @@ function Start() {
                     </p>
                     
                     <div className="d-flex flex-column align-items-center gap-2">
-                        <Link to={token ? "/createinterview" : "/signup"} className="text-decoration-none">
+                        <Link to={token ? "/createinterview" : "/signup"} style={{ textDecoration: "none" }}>
                             <button
                                 type="button"
                                 className="btn btn-lg fw-bold px-4 py-3 shadow-sm d-inline-flex align-items-center gap-2"
@@ -53,7 +53,8 @@ function Start() {
                                     color: "#0F9D9A",
                                     border: "none",
                                     borderRadius: "12px",
-                                    fontSize: "15px"
+                                    fontSize: "15px",
+                                    textDecoration: "none"
                                 }}
                             >
                                 <span>Get Started for Free</span> <FiArrowRight size={17} />
