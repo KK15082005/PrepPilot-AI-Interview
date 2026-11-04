@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FiBell, FiSearch, FiMenu, FiPlus, FiX, FiUser, FiLogOut, FiCheckCircle, FiChevronDown } from "react-icons/fi";
+import { FiBell, FiSearch, FiMenu, FiPlus, FiX, FiUser, FiLogOut, FiCheckCircle, FiChevronDown, FiArrowLeft } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import API from "../services/api";
@@ -261,6 +261,14 @@ function Topbar({ searchQuery = "", onSearchChange, onToggleSidebar }) {
                                         onClick={() => setProfileDropdownOpen(false)}
                                     >
                                         <FiPlus size={15} className="text-secondary" /> New Mock Session
+                                    </Link>
+                                    <Link
+                                        to="/"
+                                        className="dropdown-item px-3 py-2 d-flex align-items-center gap-2 text-dark"
+                                        style={{ fontSize: "13px", textDecoration: "none" }}
+                                        onClick={() => setProfileDropdownOpen(false)}
+                                    >
+                                        <FiArrowLeft size={15} className="text-secondary" /> Back to Landing Page
                                     </Link>
                                 </div>
 

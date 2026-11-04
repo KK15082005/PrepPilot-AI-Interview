@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "./Login.css";
-import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiArrowLeft } from "react-icons/fi";
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import API from '../services/api';
@@ -54,6 +54,21 @@ function Login() {
     return (
         <div className='login'>
             <div className='login-card'>
+                {/* Back to Landing Page Button */}
+                <div className="d-flex justify-content-start mb-3">
+                    <Link
+                        to="/"
+                        className="text-decoration-none d-inline-flex align-items-center gap-1.5 text-white fw-semibold btn btn-sm border-0 px-3 py-1.5 rounded-pill shadow-sm"
+                        style={{
+                            fontSize: "12.5px",
+                            background: "linear-gradient(135deg, #0F9D9A, #3CC8C3)",
+                            color: "#ffffff"
+                        }}
+                    >
+                        <FiArrowLeft size={14} style={{ color: "#ffffff" }} /> <span className="text-white" style={{ color: "#ffffff" }}>Back to Home</span>
+                    </Link>
+                </div>
+
                 {/* Brand Header */}
                 <div className="text-center mb-4">
                     <Link to="/" className="text-decoration-none d-inline-flex align-items-center mb-2">
@@ -164,6 +179,12 @@ function Login() {
                         <span className='text-secondary'>Don't have an account? </span>
                         <Link to="/signup" style={{ color: "#0F9D9A", fontWeight: "600", textDecoration: "none" }}>
                             Create one for free
+                        </Link>
+                    </div>
+
+                    <div className="text-center mt-3 pt-3 border-top">
+                        <Link to="/" style={{ color: "#64748B", fontSize: "12.5px", textDecoration: "none" }} className="d-inline-flex align-items-center gap-1">
+                            <FiArrowLeft size={13} /> Return to Landing Page
                         </Link>
                     </div>
                 </form>
