@@ -1,7 +1,7 @@
 import React from 'react';
 import Card1 from './card1';
 import Card2 from './card2';
-import Navbar from '../navbar';
+import Navbar from '../Navbar';
 import Footer from '../footer';
 
 function Features() {

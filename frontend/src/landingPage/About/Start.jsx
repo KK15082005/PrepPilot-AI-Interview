@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FiArrowRight } from 'react-icons/fi';
 
 function Start() {
     const token = localStorage.getItem("token");
@@ -7,44 +8,59 @@ function Start() {
     return (
         <section className='container my-5'>
             <div
-                className='text-center p-5 rounded-4 shadow-sm'
+                className='text-center p-4 p-md-5 rounded-4 shadow-sm'
                 style={{
-                    background: "linear-gradient(135deg, #103B49 0%, #0F9D9A 100%)",
+                    background: "linear-gradient(135deg, #0A2540 0%, #0F3A4C 60%, #0F9D9A 100%)",
                     color: "#FFFFFF",
                     borderRadius: "24px"
                 }}
             >
-                <div style={{ maxWidth: "620px", margin: "0 auto" }}>
-                    <span className="badge bg-white text-dark px-3 py-2 rounded-pill fw-semibold mb-3">
-                        🚀 START YOUR PREPARATION
+                <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+                    <span
+                        className="badge px-3 py-1.5 rounded-pill fw-semibold mb-3"
+                        style={{
+                            background: "rgba(255, 255, 255, 0.15)",
+                            border: "1px solid rgba(255, 255, 255, 0.25)",
+                            fontSize: "12px"
+                        }}
+                    >
+                        🚀 START YOUR MOCK PRACTICE
                     </span>
 
-                    <h2 className='fw-bold text-white mb-3 display-6' style={{ lineHeight: "1.25" }}>
+                    <h2
+                        className='fw-bold text-white mb-3'
+                        style={{
+                            fontSize: "clamp(1.6rem, 3.5vw, 2.3rem)",
+                            lineHeight: "1.25",
+                            letterSpacing: "-0.02em"
+                        }}
+                    >
                         Ready to Ace Your Next Interview?
                     </h2>
 
-                    <p className='text-white-50 mb-4' style={{ fontSize: "16px", lineHeight: "1.6" }}>
-                        Join thousands of aspiring software engineers and professionals practicing real-time mock interviews with PrepPilot AI.
+                    <p className='text-white-50 mb-4' style={{ fontSize: "15px", lineHeight: "1.6" }}>
+                        Generate role-tailored questions, practice speaking naturally under real session timers,
+                        and receive objective AI evaluation breakdowns.
                     </p>
                     
                     <div className="d-flex flex-column align-items-center gap-2">
-                        <Link to={token ? "/createinterview" : "/signup"}>
+                        <Link to={token ? "/createinterview" : "/signup"} className="text-decoration-none">
                             <button
                                 type="button"
-                                className="btn btn-lg fw-bold px-5 py-3 shadow"
+                                className="btn btn-lg fw-bold px-4 py-3 shadow-sm d-inline-flex align-items-center gap-2"
                                 style={{
                                     background: "#FFFFFF",
                                     color: "#0F9D9A",
                                     border: "none",
                                     borderRadius: "12px",
-                                    fontSize: "17px"
+                                    fontSize: "15px"
                                 }}
                             >
-                                Get Started for Free →
+                                <span>Get Started for Free</span> <FiArrowRight size={17} />
                             </button>
                         </Link>
-                        <small className='text-white-50 mt-1'>
-                            No credit card required • Instant access in 30 seconds
+                        <small className='text-white-50 mt-1' style={{ fontSize: "12px" }}>
+                            No credit card required • Create and practice in seconds
                         </small>
                     </div>
                 </div>                

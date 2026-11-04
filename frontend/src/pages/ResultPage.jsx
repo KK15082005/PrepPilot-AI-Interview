@@ -151,10 +151,17 @@ function ResultPage() {
     else if (avgScore < 7) ratingBadgeClass = "bg-warning text-dark";
 
     return (
-        <div style={{ background: "#FCFEFE", minHeight: "100vh", padding: "40px 0 80px" }}>
-            <div className="container" style={{ maxWidth: "940px" }}>
+        <div style={{ background: "#FCFEFE", minHeight: "100vh", padding: "clamp(20px, 3.5vw, 40px) 16px 80px" }}>
+            <style>{`
+                @media print {
+                    .no-print { display: none !important; }
+                    body { background: #FFFFFF !important; }
+                    .card { box-shadow: none !important; border: 1px solid #E2E8F0 !important; }
+                }
+            `}</style>
+            <div className="container" style={{ maxWidth: "940px", padding: 0 }}>
                 {/* Top Navigation */}
-                <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 no-print">
                     <button
                         className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
                         onClick={() => navigate("/dashboard")}
@@ -175,7 +182,7 @@ function ResultPage() {
                         >
                             <FiPrinter /> Print / Save PDF
                         </button>
-                        <Link to="/createinterview">
+                        <Link to="/createinterview" className="text-decoration-none">
                             <button
                                 className="btn btn-sm text-white d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
                                 style={{ background: "linear-gradient(135deg,#0F9D9A,#3CC8C3)", border: "none" }}
@@ -379,34 +386,34 @@ function ResultPage() {
                             >
                                 {/* Question Accordion Header */}
                                 <div
-                                    className="p-4 d-flex justify-content-between align-items-center"
+                                    className="p-3 p-sm-4 d-flex justify-content-between align-items-center"
                                     style={{ cursor: "pointer", background: isOpen ? "#F8FAFC" : "#FFFFFF" }}
                                     onClick={() => toggleQuestion(index)}
                                 >
-                                    <div className="me-3">
-                                        <div className="d-flex align-items-center gap-2 mb-2 flex-wrap">
-                                            <span className="badge bg-light text-dark border px-2 py-1">
+                                    <div className="me-2 me-sm-3" style={{ minWidth: 0 }}>
+                                        <div className="d-flex align-items-center gap-1.5 gap-sm-2 mb-2 flex-wrap">
+                                            <span className="badge bg-light text-dark border px-2 py-1" style={{ fontSize: "11px" }}>
                                                 Question {index + 1}
                                             </span>
-                                            <span className="badge bg-light text-secondary border px-2 py-1">
+                                            <span className="badge bg-light text-secondary border px-2 py-1" style={{ fontSize: "11px" }}>
                                                 {item.questionType || "General"}
                                             </span>
-                                            <span className="badge bg-light text-secondary border px-2 py-1">
+                                            <span className="badge bg-light text-secondary border px-2 py-1" style={{ fontSize: "11px" }}>
                                                 {item.topic || "Core"}
                                             </span>
                                         </div>
-                                        <h5 className="fw-bold mb-0" style={{ color: "#1E293B", fontSize: "17px" }}>
+                                        <h5 className="fw-bold mb-0" style={{ color: "#1E293B", fontSize: "clamp(15px, 2.5vw, 17px)", lineHeight: "1.4" }}>
                                             {item.question}
                                         </h5>
                                     </div>
 
-                                    <div className="d-flex align-items-center gap-3 flex-shrink-0">
+                                    <div className="d-flex align-items-center gap-2 gap-sm-3 flex-shrink-0">
                                         <div className="text-end">
-                                            <span className="fw-bold" style={{ fontSize: "18px", color: qScore >= 7 ? "#10B981" : qScore >= 5 ? "#F59E0B" : "#EF4444" }}>
+                                            <span className="fw-bold" style={{ fontSize: "clamp(15px, 2vw, 18px)", color: qScore >= 7 ? "#10B981" : qScore >= 5 ? "#F59E0B" : "#EF4444" }}>
                                                 {item.isAnswered ? `${qScore} / 10` : "Skipped"}
                                             </span>
                                         </div>
-                                        <button className="btn btn-sm btn-light border rounded-circle p-2">
+                                        <button className="btn btn-sm btn-light border rounded-circle p-1.5 p-sm-2" style={{ width: "34px", height: "34px" }}>
                                             {isOpen ? <FiChevronUp /> : <FiChevronDown />}
                                         </button>
                                     </div>
@@ -512,7 +519,7 @@ function ResultPage() {
 
                 {/* Bottom Call to Action */}
                 <div
-                    className="card border-0 p-5 text-center mt-5"
+                    className="card border-0 p-4 p-sm-5 text-center mt-5 no-print"
                     style={{
                         borderRadius: "24px",
                         background: "linear-gradient(135deg,#EEF8F8 0%,#F9FEFE 100%)",
